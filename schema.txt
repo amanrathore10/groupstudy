@@ -1,0 +1,18 @@
+userdata
+
+user details master
+unique id
+name email id ,phone no, country,city,class,dob,coaching,sex,image,tagline
+
+
+
+subjects master
+subject 
+
+questions master
+questionid userid subjectid question_content timestamp 3tags isreported
+
+subject master
+
+subjectid subject name tag 
+stored procedure.

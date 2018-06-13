@@ -1,0 +1,736 @@
+<?php
+    session_start();
+    include 'config.php';
+
+?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Group Study</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.8.3/modernizr.min.js"></script>
+    <link rel="stylesheet" href="css/style.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/4.12.0/firebase.js"></script>
+    <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+
+    <script>
+        // Initialize Firebase
+        var config = {
+            apiKey: "AIzaSyCGwG7E3A8fuafiSyJmEW4ssy2sf2JxUvI",
+            authDomain: "my-project-1515396851668.firebaseapp.com",
+            databaseURL: "https://my-project-1515396851668.firebaseio.com",
+            projectId: "my-project-1515396851668",
+            storageBucket: "my-project-1515396851668.appspot.com",
+            clientId:"983531817565-llovm55vp61va25jg4sevs4jpige0ekp.apps.googleusercontent.com",
+            messagingSenderId: "983531817565",
+            scopes:[
+                'profile',
+                'email',
+                'photoURL'
+            ]
+
+        };
+        firebase.initializeApp(config);
+
+    </script>
+    <script src="gs.js"></script>
+</head>
+<body>
+        <div class="question-modal">
+            <div class="question-form-container">
+                <div class="closemodal" onclick="modalclose()"><img src="data:image/svg+xml;utf8;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iaXNvLTg4NTktMSI/Pgo8IS0tIEdlbmVyYXRvcjogQWRvYmUgSWxsdXN0cmF0b3IgMTkuMC4wLCBTVkcgRXhwb3J0IFBsdWctSW4gLiBTVkcgVmVyc2lvbjogNi4wMCBCdWlsZCAwKSAgLS0+CjxzdmcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayIgdmVyc2lvbj0iMS4xIiBpZD0iQ2FwYV8xIiB4PSIwcHgiIHk9IjBweCIgdmlld0JveD0iMCAwIDQ1NS4xMTEgNDU1LjExMSIgc3R5bGU9ImVuYWJsZS1iYWNrZ3JvdW5kOm5ldyAwIDAgNDU1LjExMSA0NTUuMTExOyIgeG1sOnNwYWNlPSJwcmVzZXJ2ZSIgd2lkdGg9IjI0cHgiIGhlaWdodD0iMjRweCI+CjxjaXJjbGUgc3R5bGU9ImZpbGw6I0UyNEM0QjsiIGN4PSIyMjcuNTU2IiBjeT0iMjI3LjU1NiIgcj0iMjI3LjU1NiIvPgo8cGF0aCBzdHlsZT0iZmlsbDojRDE0MDNGOyIgZD0iTTQ1NS4xMTEsMjI3LjU1NmMwLDEyNS4xNTYtMTAyLjQsMjI3LjU1Ni0yMjcuNTU2LDIyNy41NTZjLTcyLjUzMywwLTEzNi41MzMtMzIuNzExLTE3Ny43NzgtODUuMzMzICBjMzguNCwzMS4yODksODguMTc4LDQ5Ljc3OCwxNDIuMjIyLDQ5Ljc3OGMxMjUuMTU2LDAsMjI3LjU1Ni0xMDIuNCwyMjcuNTU2LTIyNy41NTZjMC01NC4wNDQtMTguNDg5LTEwMy44MjItNDkuNzc4LTE0Mi4yMjIgIEM0MjIuNCw5MS4wMjIsNDU1LjExMSwxNTUuMDIyLDQ1NS4xMTEsMjI3LjU1NnoiLz4KPHBhdGggc3R5bGU9ImZpbGw6I0ZGRkZGRjsiIGQ9Ik0zMzEuMzc4LDMzMS4zNzhjLTguNTMzLDguNTMzLTIyLjc1Niw4LjUzMy0zMS4yODksMGwtNzIuNTMzLTcyLjUzM2wtNzIuNTMzLDcyLjUzMyAgYy04LjUzMyw4LjUzMy0yMi43NTYsOC41MzMtMzEuMjg5LDBjLTguNTMzLTguNTMzLTguNTMzLTIyLjc1NiwwLTMxLjI4OWw3Mi41MzMtNzIuNTMzbC03Mi41MzMtNzIuNTMzICBjLTguNTMzLTguNTMzLTguNTMzLTIyLjc1NiwwLTMxLjI4OWM4LjUzMy04LjUzMywyMi43NTYtOC41MzMsMzEuMjg5LDBsNzIuNTMzLDcyLjUzM2w3Mi41MzMtNzIuNTMzICBjOC41MzMtOC41MzMsMjIuNzU2LTguNTMzLDMxLjI4OSwwYzguNTMzLDguNTMzLDguNTMzLDIyLjc1NiwwLDMxLjI4OWwtNzIuNTMzLDcyLjUzM2w3Mi41MzMsNzIuNTMzICBDMzM5LjkxMSwzMDguNjIyLDMzOS45MTEsMzIyLjg0NCwzMzEuMzc4LDMzMS4zNzh6Ii8+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+Cjwvc3ZnPgo=" /></div>
+                <div class="row Ask-question">
+
+                    <div class="col">
+                        <div class="row Ask-question">
+                            <div class="col">
+                                <div class="row question-container">
+                                    <div></div>
+                                    <div class="row question-bar">
+                                        <!--<input type="text" id="ask" name="ask-question" placeholder="Anything to ask?">-->
+                                        <div class="question-user-image"><img  src="" id="question-user-image" alt=""></div>
+                                        <div class="question-bar-content">
+                                            <div id="ask" onchange="" onblur="hidehint()" aria-describedby="What's on your mind?" role="textbox" contenteditable="true" aria-placeholder="Anything to ask?"
+                                            >
+
+                                            </div>
+                                            <div class="hint">Anything to ask?</div>
+                                            <label for="ask">Do you have any doubt?Ask your question here</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="question-footer">
+                                    <div id="question-tags">
+
+                                    </div>
+                                    <div class="question-submit-bar">
+                                        <div class="add-tags">
+                                            <input type="text" list="subjects-list" placeholder="Topics/Subjects" id="question-tag-input">
+                                            <datalist id="subjects-list">
+                                            </datalist>
+                                            <button id="addtag-btn">+</button>
+                                        </div>
+                                        <div class="message">Minimum 1 subject required</div>
+                                        <button id="ask-button" type="submit">Submit</button></div>
+                                </div>
+
+                            </div>
+
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        <div class="request-notification">
+            <div id="request-notification-content">There is some error. Please try again</div>
+        </div>
+        <div class="container">
+
+            <div class="row header">
+                <div class="header-site-logo">
+                    <a href=""><img src="images/gs-icon.png" alt=""></a>
+                </div>
+                <div class="row header-nav">
+                    <div class="row header-nav-links">
+                        <ul class="row header-nav-links-list">
+                            <li class="active"><a href="index.html">Home</a></li>
+                            <li class=""><a href="groups.html">Groups</a></li>
+                            <li class=""><a href="questions.html">Questions</a></li>
+                        </ul>
+                    </div>
+                    <div class="row header-nav-search">
+                        <div class="row header-nav-search-bar">
+                            <input type="text" id="search" name="search" placeholder="Search">
+                            <label for="search"><img src="data:image/svg+xml;utf8;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iaXNvLTg4NTktMSI/Pgo8IS0tIEdlbmVyYXRvcjogQWRvYmUgSWxsdXN0cmF0b3IgMTkuMS4wLCBTVkcgRXhwb3J0IFBsdWctSW4gLiBTVkcgVmVyc2lvbjogNi4wMCBCdWlsZCAwKSAgLS0+CjxzdmcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayIgdmVyc2lvbj0iMS4xIiBpZD0iQ2FwYV8xIiB4PSIwcHgiIHk9IjBweCIgdmlld0JveD0iMCAwIDQ1MSA0NTEiIHN0eWxlPSJlbmFibGUtYmFja2dyb3VuZDpuZXcgMCAwIDQ1MSA0NTE7IiB4bWw6c3BhY2U9InByZXNlcnZlIiB3aWR0aD0iMTZweCIgaGVpZ2h0PSIxNnB4Ij4KPGc+Cgk8cGF0aCBkPSJNNDQ3LjA1LDQyOGwtMTA5LjYtMTA5LjZjMjkuNC0zMy44LDQ3LjItNzcuOSw0Ny4yLTEyNi4xQzM4NC42NSw4Ni4yLDI5OC4zNSwwLDE5Mi4zNSwwQzg2LjI1LDAsMC4wNSw4Ni4zLDAuMDUsMTkyLjMgICBzODYuMywxOTIuMywxOTIuMywxOTIuM2M0OC4yLDAsOTIuMy0xNy44LDEyNi4xLTQ3LjJMNDI4LjA1LDQ0N2MyLjYsMi42LDYuMSw0LDkuNSw0czYuOS0xLjMsOS41LTQgICBDNDUyLjI1LDQ0MS44LDQ1Mi4yNSw0MzMuMiw0NDcuMDUsNDI4eiBNMjYuOTUsMTkyLjNjMC05MS4yLDc0LjItMTY1LjMsMTY1LjMtMTY1LjNjOTEuMiwwLDE2NS4zLDc0LjIsMTY1LjMsMTY1LjMgICBzLTc0LjEsMTY1LjQtMTY1LjMsMTY1LjRDMTAxLjE1LDM1Ny43LDI2Ljk1LDI4My41LDI2Ljk1LDE5Mi4zeiIgZmlsbD0iIzAwMDAwMCIvPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+Cjwvc3ZnPgo=" /></label> </div>
+                    </div>
+                </div>
+                <div class="header-user">
+                    <div id="notification_button">
+                        <div class="header-user-image">
+                            <span class="notif_count">+1</span>
+                            <img src="./icons/notification_icon.png" class="notif_icon" alt="" >
+                            <div class="header-user-notif col">
+                                <div class="notification_container">
+                                    <div class="row notification_heading ">
+                                        <span>Notifications</span>
+                                    </div>
+                                    <div id="more_notif">+ more</div>
+                                    <div class="new">
+                                        <div class="new_heading">Newest</div>
+                                    </div>
+                                    <div class="earlier">
+                                        <div class="earlier_heading">Earlier</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="header-user-image"><a href="user-profile.html"><img class="user-image" id="userimage" src="" alt=""></a><div class="header-user-action col"><div><button class="logoutbtn" onclick="signout()" >Logout</button></div><div>
+                        <a href="userprofile.html">My Profile</a></div></div></div>
+                </div>
+            </div>
+            <div class="col main-container">
+                <div class="row">
+                    <div class="col left-menu">
+                        <div class="col">
+                            <div class="row category">
+                                <div class="col">
+                                    <div class="category-header">
+                                        <span class="red-header">Favourite Groups</span>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col categories">
+                                            <ul>
+                                                <li class="row"><a href="" class="red-option">IIT Kanpur</a></li>
+                                                <li class="row"><a href="" class="red-option">Impact</a></li>
+                                                <li class="row"><a href="" class="red-option">Hansraj</a></li>
+
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row category">
+                                <div class="col">
+                                    <div class="category-header">
+                                        <span class="red-header">Following</span>
+                                        <span id="feed-filter">Submit</span>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col categories">
+                                            <ul id="select-subject-buttons">
+                                                <li class="row"><a href="" class="red-option">Business Stud</a><span><input class="question-subject" type="checkbox" id="Business Stud" value="Business Stud"><label for="Business Stud"></label></span></li>
+                                                <li class="row"><a href="" class="red-option">Calculus</a><span><input type="checkbox" class="question-subject" id="Calculus" value="Calculus"><label class="question-subject-label" for="Calculus"></label></span></li>
+                                                <li class="row"><a href="" class="red-option">Chemistry</a><span><input type="checkbox" class="question-subject" id="Chemistry" value="Chemistry"><label class="question-subject-label" for="Chemistry"></label></span></li>
+                                                <li class="row"><a href="" class="red-option">Civics</a><span><input type="checkbox" class="question-subject" id="Civics" value="Civics"><label class="question-subject-label" for="Civics"></label></span></li>
+                                                <li class="row"><a href="" class="red-option">Commerce</a><span><input type="checkbox" class="question-subject" id="Commerce" value="Commerce"><label class="question-subject-label" for="Commerce"></label></span></li>
+                                                <li class="row"><a href="" class="red-option">Computer</a><span><input type="checkbox" class="question-subject" id="Computer" value="Computer"><label class="question-subject-label" for="Computer"></label></span></li>
+
+                                            </ul>
+                                        </div>
+
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col feed">
+                        <div class="row">
+                            <div class="col feed-container" id="display-feed">
+                                <div class="row Ask-question" >
+                                    <div class="toast-notifier">Your Question has been submitted</div>
+                                    <div class="col">
+                                        <div class="row question-container" onclick="showmodal()">
+                                            <div class="row question-bar">
+                                                <input type="text" name="ask-question" placeholder="Anything to ask?" disabled>
+                                                <label for="ask">Do you have any doubt?Ask your question here</label>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                                <div class="row feed-post">
+                                    <div class="col">
+                                        <div class="col feed-post-question">
+                                            <div class="question-header red-header">Question</div>
+                                            <div class="question-content">Did you any time face driver cancellation or non availability of cars?</div>
+                                        </div>
+                                        <div class=" feed-post-answer">
+                                            <div class="answer-header red-header">Answer</div>
+                                            <div class="row answerer"><div class="answerer-info row"><div class="answerer-image">
+                                                <img src="https://scontent.fbho1-1.fna.fbcdn.net/v/t1.0-1/p160x160/16730131_1257021167686782_3712355408147196725_n.jpg?oh=04f5aa9dd21935bf6976c870639a35c3&oe=5B390FC9" alt=""></div>
+                                                <div class="answerer-details col"><span class="answerer-name">Aman Rathore</span><span class="answerer-others">Impact</span></div></div><div ><span class="red-header answerer-follow">Follow</span></div>
+                                            </div>
+                                            <div class="answer-content"><p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Amet, asperiores assumenda beatae eligendi expedita id illum in inventore iste laboriosam nesciunt nobis nostrum optio pariatur quam quasi quibusdam totam vel.</p>
+                                                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Architecto consequatur, consequuntur eius explicabo natus sed suscipit! Asperiores commodi eos, fugiat illum ipsum laudantium necessitatibus provident quae, quasi rem vitae voluptate.</p>
+                                                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusantium aliquid, assumenda culpa cumque earum, error esse ex excepturi necessitatibus quo recusandae reiciendis repudiandae soluta temporibus, unde vitae voluptas voluptates! Libero?
+                                                    Lorem ipsum dolor sit amet, consectetur adipisicing elit. Alias aliquam amet consequatur, eaque eligendi esse fugiat illum libero nesciunt placeat quo tempore, voluptatum. Asperiores error explicabo ratione rem totam voluptate?</p>
+                                                <button class="more-button" onclick="expandAnswer(event)">..more</button>
+                                            </div>
+                                            <div class="row post-actions"><div class="post-action-tag upvote-button upvoted">Upvote</div><div class="post-action-tag">Bookmark</div><div class="post-action-tag">Share</div><div class="post-action-tag">Report</div><div class="verify-button "> <div><span class="tick">&#x2714; Verify</span></div></div></div>
+
+                                        </div>
+                                        <div class="comment_system">
+                                            <div class="col">
+                                                <div class="comments">
+                                                    <div class="comments_header"><div class="comment_heading">Comments</div> <div class="show_comments_button">Show comments</div></div>
+                                                    <div class="comments_container">
+                                                        <span class="morecomments">+more</span>
+                                                    </div>
+                                                </div>
+                                                <div class="comment_input_container">
+
+                                                    <div class=""><img src="" class="user-image" alt=""></div><div contenteditable="true" id="comment_input" aria-placeholder="Leave a Comment..."></div>
+                                                    <span class="comment_placeholder">Leave a Comment</span>
+                                                </div></div>
+                                            </div>
+                                    </div>
+
+                                </div>
+
+                                <div class="row feed-post">
+                                    <div class="col">
+                                        <div class="col feed-post-question">
+                                            <div class="question-header red-header">Question</div>
+                                            <div class="question-content">Did you any time face driver cancellation or non availability of cars?</div>
+                                        </div>
+
+                                        <div class=" feed-post-answer">
+                                            <div class="answer-header red-header">Answer</div>
+                                            <div class="row answerer"><div class="answerer-info row"><div class="answerer-image">
+                                                <img src="https://scontent.fbho1-1.fna.fbcdn.net/v/t1.0-1/p160x160/16730131_1257021167686782_3712355408147196725_n.jpg?oh=04f5aa9dd21935bf6976c870639a35c3&oe=5B390FC9" alt=""></div>
+                                                <div class="answerer-details col"><span class="answerer-name">Aman Rathore</span><span class="answerer-others">Impact</span></div></div><div ><span class="red-header answerer-follow">Follow</span></div>
+                                            </div>
+                                            <div class="answer-content"><p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Amet, asperiores assumenda beatae eligendi expedita id illum in inventore iste laboriosam nesciunt nobis nostrum optio pariatur quam quasi quibusdam totam vel.</p>
+                                                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Architecto consequatur, consequuntur eius explicabo natus sed suscipit! Asperiores commodi eos, fugiat illum ipsum laudantium necessitatibus provident quae, quasi rem vitae voluptate.</p>
+                                                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusantium aliquid, assumenda culpa cumque earum, error esse ex excepturi necessitatibus quo recusandae reiciendis repudiandae soluta temporibus, unde vitae voluptas voluptates! Libero?
+                                                    Lorem ipsum dolor sit amet, consectetur adipisicing elit. Alias aliquam amet consequatur, eaque eligendi esse fugiat illum libero nesciunt placeat quo tempore, voluptatum. Asperiores error explicabo ratione rem totam voluptate?</p>
+                                                <button class="more-button" onclick="expandAnswer(event)">..more</button>
+                                            </div>
+                                            <div class="row post-actions"><div class="post-action-tag">Upvote</div><div class="post-action-tag">Bookmark</div><div class="post-action-tag">Share</div><div class="post-action-tag">Report</div><div class="verify-button "> <div><span class="tick">&#x2714;</span>Verify</div></div></div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row feed-post">
+                                    <div class="col">
+                                        <div class="col feed-post-question">
+                                            <div class="question-header red-header">Question</div>
+                                            <div class="question-content">Did you any time face driver cancellation or non availability of cars?</div>
+                                        </div>
+
+                                        <div class=" feed-post-answer">
+                                            <div class="answer-header red-header">Answer</div>
+                                            <div class="row answerer"><div class="answerer-info row"><div class="answerer-image">
+                                                <img src="https://scontent.fbho1-1.fna.fbcdn.net/v/t1.0-1/p160x160/16730131_1257021167686782_3712355408147196725_n.jpg?oh=04f5aa9dd21935bf6976c870639a35c3&oe=5B390FC9" alt=""></div>
+                                                <div class="answerer-details col"><span class="answerer-name">Aman Rathore</span><span class="answerer-others">Impact</span></div></div><div ><span class="red-header answerer-follow">Follow</span></div>
+                                            </div>
+                                            <div class="answer-content"><p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Amet, asperiores assumenda beatae eligendi expedita id illum in inventore iste laboriosam nesciunt nobis nostrum optio pariatur quam quasi quibusdam totam vel.</p>
+                                                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Architecto consequatur, consequuntur eius explicabo natus sed suscipit! Asperiores commodi eos, fugiat illum ipsum laudantium necessitatibus provident quae, quasi rem vitae voluptate.</p>
+                                                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusantium aliquid, assumenda culpa cumque earum, error esse ex excepturi necessitatibus quo recusandae reiciendis repudiandae soluta temporibus, unde vitae voluptas voluptates! Libero?
+                                                    Lorem ipsum dolor sit amet, consectetur adipisicing elit. Alias aliquam amet consequatur, eaque eligendi esse fugiat illum libero nesciunt placeat quo tempore, voluptatum. Asperiores error explicabo ratione rem totam voluptate?</p>
+                                                <button class="more-button" onclick="expandAnswer(event)">..more</button>
+                                            </div>
+                                            <div class="row post-actions"><div class="post-action-tag">Upvote</div><div class="post-action-tag">Bookmark</div><div class="post-action-tag">Share</div><div class="post-action-tag">Report</div><div class="verify-button "> <div><span class="tick">&#x2714;</span>Verify</div></div></div>
+
+                                        </div>
+
+
+                                    </div>
+
+                                </div>
+                                <div class="row feed-post">
+                                    <div class="col">
+                                        <div class="col feed-post-question">
+                                            <div class="question-header red-header">Question</div>
+                                            <div class="question-content">Did you any time face driver cancellation or non availability of cars?</div>
+                                        </div>
+
+                                        <div class=" feed-post-answer">
+                                            <div class="answer-header red-header">Answer</div>
+                                            <div class="row answerer"><div class="answerer-info row"><div class="answerer-image">
+                                                <img src="https://scontent.fbho1-1.fna.fbcdn.net/v/t1.0-1/p160x160/16730131_1257021167686782_3712355408147196725_n.jpg?oh=04f5aa9dd21935bf6976c870639a35c3&oe=5B390FC9" alt=""></div>
+                                                <div class="answerer-details col"><span class="answerer-name">Aman Rathore</span><span class="answerer-others">Impact</span></div></div><div ><span class="red-header answerer-follow">Follow</span></div>
+                                            </div>
+                                            <div class="answer-content"><p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Amet, asperiores assumenda beatae eligendi expedita id illum in inventore iste laboriosam nesciunt nobis nostrum optio pariatur quam quasi quibusdam totam vel.</p>
+                                                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Architecto consequatur, consequuntur eius explicabo natus sed suscipit! Asperiores commodi eos, fugiat illum ipsum laudantium necessitatibus provident quae, quasi rem vitae voluptate.</p>
+                                                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusantium aliquid, assumenda culpa cumque earum, error esse ex excepturi necessitatibus quo recusandae reiciendis repudiandae soluta temporibus, unde vitae voluptas voluptates! Libero?
+                                                    Lorem ipsum dolor sit amet, consectetur adipisicing elit. Alias aliquam amet consequatur, eaque eligendi esse fugiat illum libero nesciunt placeat quo tempore, voluptatum. Asperiores error explicabo ratione rem totam voluptate?</p>
+                                                <button class="more-button" onclick="expandAnswer(event)">..more</button>
+                                            </div>
+                                            <div class="row post-actions"><div class="post-action-tag">Upvote</div><div class="post-action-tag">Bookmark</div><div class="post-action-tag">Share</div><div class="post-action-tag">Report</div><div class="verify-button "> <div><span class="tick">&#x2714;</span>Verify</div></div></div>
+
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div class="row feed-post">
+                                    <div class="col">
+                                        <div class="col feed-post-question">
+                                            <div class="question-header red-header">Question</div>
+                                            <div class="question-content">Did you any time face driver cancellation or non availability of cars?</div>
+                                        </div>
+
+                                        <div class=" feed-post-answer">
+                                            <div class="answer-header red-header">Answer</div>
+                                            <div class="row answerer"><div class="answerer-info row"><div class="answerer-image">
+                                                <img src="https://scontent.fbho1-1.fna.fbcdn.net/v/t1.0-1/p160x160/16730131_1257021167686782_3712355408147196725_n.jpg?oh=04f5aa9dd21935bf6976c870639a35c3&oe=5B390FC9" alt=""></div>
+                                                <div class="answerer-details col"><span class="answerer-name">Aman Rathore</span><span class="answerer-others">Impact</span></div></div><div ><span class="red-header answerer-follow">Follow</span></div>
+                                            </div>
+                                            <div class="answer-content"><p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Amet, asperiores assumenda beatae eligendi expedita id illum in inventore iste laboriosam nesciunt nobis nostrum optio pariatur quam quasi quibusdam totam vel.</p>
+                                                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Architecto consequatur, consequuntur eius explicabo natus sed suscipit! Asperiores commodi eos, fugiat illum ipsum laudantium necessitatibus provident quae, quasi rem vitae voluptate.</p>
+                                                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusantium aliquid, assumenda culpa cumque earum, error esse ex excepturi necessitatibus quo recusandae reiciendis repudiandae soluta temporibus, unde vitae voluptas voluptates! Libero?
+                                                    Lorem ipsum dolor sit amet, consectetur adipisicing elit. Alias aliquam amet consequatur, eaque eligendi esse fugiat illum libero nesciunt placeat quo tempore, voluptatum. Asperiores error explicabo ratione rem totam voluptate?</p>
+                                                <button class="more-button" onclick="expandAnswer(event)">..more</button>
+                                            </div>
+                                            <div class="row post-actions"><div class="post-action-tag">Upvote</div><div class="post-action-tag">Bookmark</div><div class="post-action-tag">Share</div><div class="post-action-tag">Report</div><div class="verify-button "> <div><span class="tick">&#x2714;</span>Verify</div></div></div>
+
+                                        </div>
+
+
+                                    </div>
+
+                                </div>
+                                <div class="row feed-post">
+                                    <div class="col">
+                                        <div class="col feed-post-question">
+                                            <div class="question-header red-header">Question</div>
+                                            <div class="question-content">Did you any time face driver cancellation or non availability of cars?</div>
+                                        </div>
+
+                                        <div class=" feed-post-answer">
+                                            <div class="answer-header red-header">Answer</div>
+                                            <div class="row answerer"><div class="answerer-info row"><div class="answerer-image">
+                                                <img src="https://scontent.fbho1-1.fna.fbcdn.net/v/t1.0-1/p160x160/16730131_1257021167686782_3712355408147196725_n.jpg?oh=04f5aa9dd21935bf6976c870639a35c3&oe=5B390FC9" alt=""></div>
+                                                <div class="answerer-details col"><span class="answerer-name">Aman Rathore</span><span class="answerer-others">Impact</span></div></div><div ><span class="red-header answerer-follow">Follow</span></div>
+                                            </div>
+                                            <div class="answer-content"><p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Amet, asperiores assumenda beatae eligendi expedita id illum in inventore iste laboriosam nesciunt nobis nostrum optio pariatur quam quasi quibusdam totam vel.</p>
+                                                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Architecto consequatur, consequuntur eius explicabo natus sed suscipit! Asperiores commodi eos, fugiat illum ipsum laudantium necessitatibus provident quae, quasi rem vitae voluptate.</p>
+                                                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusantium aliquid, assumenda culpa cumque earum, error esse ex excepturi necessitatibus quo recusandae reiciendis repudiandae soluta temporibus, unde vitae voluptas voluptates! Libero?
+                                                    Lorem ipsum dolor sit amet, consectetur adipisicing elit. Alias aliquam amet consequatur, eaque eligendi esse fugiat illum libero nesciunt placeat quo tempore, voluptatum. Asperiores error explicabo ratione rem totam voluptate?</p>
+                                                <button class="more-button" onclick="expandAnswer(event)">..more</button>
+                                            </div>
+                                            <div class="row post-actions"><div class="post-action-tag">Upvote</div><div class="post-action-tag">Bookmark</div><div class="post-action-tag">Share</div><div class="post-action-tag">Report</div><div class="verify-button "> <div><span class="tick">&#x2714;</span>Verify</div></div></div>
+
+                                        </div>
+
+
+                                    </div>
+
+                                </div>
+                                <div class="row feed-post">
+                                    <div class="col">
+                                        <div class="col feed-post-question">
+                                            <div class="question-header red-header">Question</div>
+                                            <div class="question-content">Did you any time face driver cancellation or non availability of cars?</div>
+                                        </div>
+
+                                        <div class=" feed-post-answer">
+                                            <div class="answer-header red-header">Answer</div>
+                                            <div class="row answerer"><div class="answerer-info row"><div class="answerer-image">
+                                                <img src="https://scontent.fbho1-1.fna.fbcdn.net/v/t1.0-1/p160x160/16730131_1257021167686782_3712355408147196725_n.jpg?oh=04f5aa9dd21935bf6976c870639a35c3&oe=5B390FC9" alt=""></div>
+                                                <div class="answerer-details col"><span class="answerer-name">Aman Rathore</span><span class="answerer-others">Impact</span></div></div><div ><span class="red-header answerer-follow">Follow</span></div>
+                                            </div>
+                                            <div class="answer-content"><p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Amet, asperiores assumenda beatae eligendi expedita id illum in inventore iste laboriosam nesciunt nobis nostrum optio pariatur quam quasi quibusdam totam vel.</p>
+                                                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Architecto consequatur, consequuntur eius explicabo natus sed suscipit! Asperiores commodi eos, fugiat illum ipsum laudantium necessitatibus provident quae, quasi rem vitae voluptate.</p>
+                                                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusantium aliquid, assumenda culpa cumque earum, error esse ex excepturi necessitatibus quo recusandae reiciendis repudiandae soluta temporibus, unde vitae voluptas voluptates! Libero?
+                                                    Lorem ipsum dolor sit amet, consectetur adipisicing elit. Alias aliquam amet consequatur, eaque eligendi esse fugiat illum libero nesciunt placeat quo tempore, voluptatum. Asperiores error explicabo ratione rem totam voluptate?</p>
+                                                <button class="more-button" onclick="expandAnswer(event)">..more</button>
+                                            </div>
+                                            <div class="row post-actions"><div class="post-action-tag">Upvote</div><div class="post-action-tag">Bookmark</div><div class="post-action-tag">Share</div><div class="post-action-tag">Report</div><div class="verify-button "> <div><span class="tick">&#x2714;</span>Verify</div></div></div>
+
+                                        </div>
+
+
+                                    </div>
+
+                                </div>
+                                <div class="row feed-post">
+                                    <div class="col">
+                                        <div class="col feed-post-question">
+                                            <div class="question-header red-header">Question</div>
+                                            <div class="question-content">Did you any time face driver cancellation or non availability of cars?</div>
+                                        </div>
+
+                                        <div class=" feed-post-answer">
+                                            <div class="answer-header red-header">Answer</div>
+                                            <div class="row answerer"><div class="answerer-info row"><div class="answerer-image">
+                                                <img src="https://scontent.fbho1-1.fna.fbcdn.net/v/t1.0-1/p160x160/16730131_1257021167686782_3712355408147196725_n.jpg?oh=04f5aa9dd21935bf6976c870639a35c3&oe=5B390FC9" alt=""></div>
+                                                <div class="answerer-details col"><span class="answerer-name">Aman Rathore</span><span class="answerer-others">Impact</span></div></div><div ><span class="red-header answerer-follow">Follow</span></div>
+                                            </div>
+                                            <div class="answer-content"><p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Amet, asperiores assumenda beatae eligendi expedita id illum in inventore iste laboriosam nesciunt nobis nostrum optio pariatur quam quasi quibusdam totam vel.</p>
+                                                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Architecto consequatur, consequuntur eius explicabo natus sed suscipit! Asperiores commodi eos, fugiat illum ipsum laudantium necessitatibus provident quae, quasi rem vitae voluptate.</p>
+                                                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusantium aliquid, assumenda culpa cumque earum, error esse ex excepturi necessitatibus quo recusandae reiciendis repudiandae soluta temporibus, unde vitae voluptas voluptates! Libero?
+                                                    Lorem ipsum dolor sit amet, consectetur adipisicing elit. Alias aliquam amet consequatur, eaque eligendi esse fugiat illum libero nesciunt placeat quo tempore, voluptatum. Asperiores error explicabo ratione rem totam voluptate?</p>
+                                                <button class="more-button" onclick="expandAnswer(event)">..more</button>
+                                            </div>
+                                            <div class="row post-actions"><div class="post-action-tag">Upvote</div><div class="post-action-tag">Bookmark</div><div class="post-action-tag">Share</div><div class="post-action-tag">Report</div><div class="verify-button "> <div><span class="tick">&#x2714;</span>Verify</div></div></div>
+
+                                        </div>
+
+
+                                    </div>
+
+                                </div>
+                                <div class="row feed-post">
+                                    <div class="col">
+                                        <div class="col feed-post-question">
+                                            <div class="question-header red-header">Question</div>
+                                            <div class="question-content">Did you any time face driver cancellation or non availability of cars?</div>
+                                        </div>
+
+                                        <div class=" feed-post-answer">
+                                            <div class="answer-header red-header">Answer</div>
+                                            <div class="row answerer"><div class="answerer-info row"><div class="answerer-image">
+                                                <img src="https://scontent.fbho1-1.fna.fbcdn.net/v/t1.0-1/p160x160/16730131_1257021167686782_3712355408147196725_n.jpg?oh=04f5aa9dd21935bf6976c870639a35c3&oe=5B390FC9" alt=""></div>
+                                                <div class="answerer-details col"><span class="answerer-name">Aman Rathore</span><span class="answerer-others">Impact</span></div></div><div ><span class="red-header answerer-follow">Follow</span></div>
+                                            </div>
+                                            <div class="answer-content"><p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Amet, asperiores assumenda beatae eligendi expedita id illum in inventore iste laboriosam nesciunt nobis nostrum optio pariatur quam quasi quibusdam totam vel.</p>
+                                                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Architecto consequatur, consequuntur eius explicabo natus sed suscipit! Asperiores commodi eos, fugiat illum ipsum laudantium necessitatibus provident quae, quasi rem vitae voluptate.</p>
+                                                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusantium aliquid, assumenda culpa cumque earum, error esse ex excepturi necessitatibus quo recusandae reiciendis repudiandae soluta temporibus, unde vitae voluptas voluptates! Libero?
+                                                    Lorem ipsum dolor sit amet, consectetur adipisicing elit. Alias aliquam amet consequatur, eaque eligendi esse fugiat illum libero nesciunt placeat quo tempore, voluptatum. Asperiores error explicabo ratione rem totam voluptate?</p>
+                                                <button class="more-button" onclick="expandAnswer(event)">..more</button>
+                                            </div>
+                                            <div class="row post-actions"><div class="post-action-tag">Upvote</div><div class="post-action-tag">Bookmark</div><div class="post-action-tag">Share</div><div class="post-action-tag">Report</div><div class="verify-button "> <div><span class="tick">&#x2714;</span>Verify</div></div></div>
+
+                                        </div>
+
+
+                                    </div>
+
+                                </div>
+                                <div class="row feed-post">
+                                    <div class="col">
+                                        <div class="col feed-post-question">
+                                            <div class="question-header red-header">Question</div>
+                                            <div class="question-content">Did you any time face driver cancellation or non availability of cars?</div>
+                                        </div>
+
+                                        <div class=" feed-post-answer">
+                                            <div class="answer-header red-header">Answer</div>
+                                            <div class="row answerer"><div class="answerer-info row"><div class="answerer-image">
+                                                <img src="https://scontent.fbho1-1.fna.fbcdn.net/v/t1.0-1/p160x160/16730131_1257021167686782_3712355408147196725_n.jpg?oh=04f5aa9dd21935bf6976c870639a35c3&oe=5B390FC9" alt=""></div>
+                                                <div class="answerer-details col"><span class="answerer-name">Aman Rathore</span><span class="answerer-others">Impact</span></div></div><div ><span class="red-header answerer-follow">Follow</span></div>
+                                            </div>
+                                            <div class="answer-content"><p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Amet, asperiores assumenda beatae eligendi expedita id illum in inventore iste laboriosam nesciunt nobis nostrum optio pariatur quam quasi quibusdam totam vel.</p>
+                                                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Architecto consequatur, consequuntur eius explicabo natus sed suscipit! Asperiores commodi eos, fugiat illum ipsum laudantium necessitatibus provident quae, quasi rem vitae voluptate.</p>
+                                                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusantium aliquid, assumenda culpa cumque earum, error esse ex excepturi necessitatibus quo recusandae reiciendis repudiandae soluta temporibus, unde vitae voluptas voluptates! Libero?
+                                                    Lorem ipsum dolor sit amet, consectetur adipisicing elit. Alias aliquam amet consequatur, eaque eligendi esse fugiat illum libero nesciunt placeat quo tempore, voluptatum. Asperiores error explicabo ratione rem totam voluptate?</p>
+                                                <button class="more-button" onclick="expandAnswer(event)">..more</button>
+                                            </div>
+                                            <div class="row post-actions"><div class="post-action-tag">Upvote</div><div class="post-action-tag">Bookmark</div><div class="post-action-tag">Share</div><div class="post-action-tag">Report</div><div class="verify-button "> <div><span class="tick">&#x2714;</span>Verify</div></div></div>
+
+                                        </div>
+
+
+                                    </div>
+
+                                </div>
+                                <div class="row feed-post">
+                                    <div class="col">
+                                        <div class="col feed-post-question">
+                                            <div class="question-header red-header">Question</div>
+                                            <div class="question-content">Did you any time face driver cancellation or non availability of cars?</div>
+                                        </div>
+
+                                        <div class=" feed-post-answer">
+                                            <div class="answer-header red-header">Answer</div>
+                                            <div class="row answerer"><div class="answerer-info row"><div class="answerer-image">
+                                                <img src="https://scontent.fbho1-1.fna.fbcdn.net/v/t1.0-1/p160x160/16730131_1257021167686782_3712355408147196725_n.jpg?oh=04f5aa9dd21935bf6976c870639a35c3&oe=5B390FC9" alt=""></div>
+                                                <div class="answerer-details col"><span class="answerer-name">Aman Rathore</span><span class="answerer-others">Impact</span></div></div><div ><span class="red-header answerer-follow">Follow</span></div>
+                                            </div>
+                                            <div class="answer-content"><p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Amet, asperiores assumenda beatae eligendi expedita id illum in inventore iste laboriosam nesciunt nobis nostrum optio pariatur quam quasi quibusdam totam vel.</p>
+                                                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Architecto consequatur, consequuntur eius explicabo natus sed suscipit! Asperiores commodi eos, fugiat illum ipsum laudantium necessitatibus provident quae, quasi rem vitae voluptate.</p>
+                                                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusantium aliquid, assumenda culpa cumque earum, error esse ex excepturi necessitatibus quo recusandae reiciendis repudiandae soluta temporibus, unde vitae voluptas voluptates! Libero?
+                                                    Lorem ipsum dolor sit amet, consectetur adipisicing elit. Alias aliquam amet consequatur, eaque eligendi esse fugiat illum libero nesciunt placeat quo tempore, voluptatum. Asperiores error explicabo ratione rem totam voluptate?</p>
+                                                <button class="more-button" onclick="expandAnswer(event)">..more</button>
+                                            </div>
+                                            <div class="row post-actions"><div class="post-action-tag">Upvote</div><div class="post-action-tag">Bookmark</div><div class="post-action-tag">Share</div><div class="post-action-tag">Report</div><div class="verify-button "> <div><span class="tick">&#x2714;</span>Verify</div></div></div>
+
+                                        </div>
+
+
+                                    </div>
+
+                                </div>
+                                <div class="row feed-post">
+                                    <div class="col">
+                                        <div class="col feed-post-question">
+                                            <div class="question-header red-header">Question</div>
+                                            <div class="question-content">Did you any time face driver cancellation or non availability of cars?</div>
+                                        </div>
+
+                                        <div class=" feed-post-answer">
+                                            <div class="answer-header red-header">Answer</div>
+                                            <div class="row answerer"><div class="answerer-info row"><div class="answerer-image">
+                                                <img src="https://scontent.fbho1-1.fna.fbcdn.net/v/t1.0-1/p160x160/16730131_1257021167686782_3712355408147196725_n.jpg?oh=04f5aa9dd21935bf6976c870639a35c3&oe=5B390FC9" alt=""></div>
+                                                <div class="answerer-details col"><span class="answerer-name">Aman Rathore</span><span class="answerer-others">Impact</span></div></div><div ><span class="red-header answerer-follow">Follow</span></div>
+                                            </div>
+                                            <div class="answer-content"><p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Amet, asperiores assumenda beatae eligendi expedita id illum in inventore iste laboriosam nesciunt nobis nostrum optio pariatur quam quasi quibusdam totam vel.</p>
+                                                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Architecto consequatur, consequuntur eius explicabo natus sed suscipit! Asperiores commodi eos, fugiat illum ipsum laudantium necessitatibus provident quae, quasi rem vitae voluptate.</p>
+                                                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusantium aliquid, assumenda culpa cumque earum, error esse ex excepturi necessitatibus quo recusandae reiciendis repudiandae soluta temporibus, unde vitae voluptas voluptates! Libero?
+                                                    Lorem ipsum dolor sit amet, consectetur adipisicing elit. Alias aliquam amet consequatur, eaque eligendi esse fugiat illum libero nesciunt placeat quo tempore, voluptatum. Asperiores error explicabo ratione rem totam voluptate?</p>
+                                                <button class="more-button" onclick="expandAnswer(event)">..more</button>
+                                            </div>
+                                            <div class="row post-actions"><div class="post-action-tag">Upvote</div><div class="post-action-tag">Bookmark</div><div class="post-action-tag">Share</div><div class="post-action-tag">Report</div><div class="verify-button "> <div><span class="tick">&#x2714;</span>Verify</div></div></div>
+
+                                        </div>
+
+
+                                    </div>
+
+                                </div>
+                                <div class="row feed-post">
+                                    <div class="col">
+                                        <div class="col feed-post-question">
+                                            <div class="question-header red-header">Question</div>
+                                            <div class="question-content">Did you any time face driver cancellation or non availability of cars?</div>
+                                        </div>
+
+                                        <div class=" feed-post-answer">
+                                            <div class="answer-header red-header">Answer</div>
+                                            <div class="row answerer"><div class="answerer-info row"><div class="answerer-image">
+                                                <img src="https://scontent.fbho1-1.fna.fbcdn.net/v/t1.0-1/p160x160/16730131_1257021167686782_3712355408147196725_n.jpg?oh=04f5aa9dd21935bf6976c870639a35c3&oe=5B390FC9" alt=""></div>
+                                                <div class="answerer-details col"><span class="answerer-name">Aman Rathore</span><span class="answerer-others">Impact</span></div></div><div ><span class="red-header answerer-follow">Follow</span></div>
+                                            </div>
+                                            <div class="answer-content"><p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Amet, asperiores assumenda beatae eligendi expedita id illum in inventore iste laboriosam nesciunt nobis nostrum optio pariatur quam quasi quibusdam totam vel.</p>
+                                                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Architecto consequatur, consequuntur eius explicabo natus sed suscipit! Asperiores commodi eos, fugiat illum ipsum laudantium necessitatibus provident quae, quasi rem vitae voluptate.</p>
+                                                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusantium aliquid, assumenda culpa cumque earum, error esse ex excepturi necessitatibus quo recusandae reiciendis repudiandae soluta temporibus, unde vitae voluptas voluptates! Libero?
+                                                    Lorem ipsum dolor sit amet, consectetur adipisicing elit. Alias aliquam amet consequatur, eaque eligendi esse fugiat illum libero nesciunt placeat quo tempore, voluptatum. Asperiores error explicabo ratione rem totam voluptate?</p>
+                                                <button class="more-button" onclick="expandAnswer(event)">..more</button>
+                                            </div>
+                                            <div class="row post-actions"><div class="post-action-tag">Upvote</div><div class="post-action-tag">Bookmark</div><div class="post-action-tag">Share</div><div class="post-action-tag">Report</div><div class="verify-button "> <div><span class="tick">&#x2714;</span>Verify</div></div></div>
+
+                                        </div>
+
+
+                                    </div>
+
+                                </div>
+                                <div class="row feed-post">
+                                    <div class="col">
+                                        <div class="col feed-post-question">
+                                            <div class="question-header red-header">Question</div>
+                                            <div class="question-content">Did you any time face driver cancellation or non availability of cars?</div>
+                                        </div>
+
+                                        <div class=" feed-post-answer">
+                                            <div class="answer-header red-header">Answer</div>
+                                            <div class="row answerer"><div class="answerer-info row"><div class="answerer-image">
+                                                <img src="https://scontent.fbho1-1.fna.fbcdn.net/v/t1.0-1/p160x160/16730131_1257021167686782_3712355408147196725_n.jpg?oh=04f5aa9dd21935bf6976c870639a35c3&oe=5B390FC9" alt=""></div>
+                                                <div class="answerer-details col"><span class="answerer-name">Aman Rathore</span><span class="answerer-others">Impact</span></div></div><div ><span class="red-header answerer-follow">Follow</span></div>
+                                            </div>
+                                            <div class="answer-content"><p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Amet, asperiores assumenda beatae eligendi expedita id illum in inventore iste laboriosam nesciunt nobis nostrum optio pariatur quam quasi quibusdam totam vel.</p>
+                                                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Architecto consequatur, consequuntur eius explicabo natus sed suscipit! Asperiores commodi eos, fugiat illum ipsum laudantium necessitatibus provident quae, quasi rem vitae voluptate.</p>
+                                                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusantium aliquid, assumenda culpa cumque earum, error esse ex excepturi necessitatibus quo recusandae reiciendis repudiandae soluta temporibus, unde vitae voluptas voluptates! Libero?
+                                                    Lorem ipsum dolor sit amet, consectetur adipisicing elit. Alias aliquam amet consequatur, eaque eligendi esse fugiat illum libero nesciunt placeat quo tempore, voluptatum. Asperiores error explicabo ratione rem totam voluptate?</p>
+                                                <button class="more-button" onclick="expandAnswer(event)">..more</button>
+                                            </div>
+                                            <div class="row post-actions"><div class="post-action-tag">Upvote</div><div class="post-action-tag">Bookmark</div><div class="post-action-tag">Share</div><div class="post-action-tag">Report</div><div class="verify-button "> <div><span class="tick">&#x2714;</span>Verify</div></div></div>
+
+                                        </div>
+
+
+                                    </div>
+
+                                </div>
+                                <div class="row feed-post">
+                                    <div class="col">
+                                        <div class="col feed-post-question">
+                                            <div class="question-header red-header">Question</div>
+                                            <div class="question-content">Did you any time face driver cancellation or non availability of cars?</div>
+                                        </div>
+
+                                        <div class=" feed-post-answer">
+                                            <div class="answer-header red-header">Answer</div>
+                                            <div class="row answerer"><div class="answerer-info row"><div class="answerer-image">
+                                                <img src="https://scontent.fbho1-1.fna.fbcdn.net/v/t1.0-1/p160x160/16730131_1257021167686782_3712355408147196725_n.jpg?oh=04f5aa9dd21935bf6976c870639a35c3&oe=5B390FC9" alt=""></div>
+                                                <div class="answerer-details col"><span class="answerer-name">Aman Rathore</span><span class="answerer-others">Impact</span></div></div><div ><span class="red-header answerer-follow">Follow</span></div>
+                                            </div>
+                                            <div class="answer-content"><p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Amet, asperiores assumenda beatae eligendi expedita id illum in inventore iste laboriosam nesciunt nobis nostrum optio pariatur quam quasi quibusdam totam vel.</p>
+                                                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Architecto consequatur, consequuntur eius explicabo natus sed suscipit! Asperiores commodi eos, fugiat illum ipsum laudantium necessitatibus provident quae, quasi rem vitae voluptate.</p>
+                                                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusantium aliquid, assumenda culpa cumque earum, error esse ex excepturi necessitatibus quo recusandae reiciendis repudiandae soluta temporibus, unde vitae voluptas voluptates! Libero?
+                                                    Lorem ipsum dolor sit amet, consectetur adipisicing elit. Alias aliquam amet consequatur, eaque eligendi esse fugiat illum libero nesciunt placeat quo tempore, voluptatum. Asperiores error explicabo ratione rem totam voluptate?</p>
+                                                <button class="more-button" onclick="expandAnswer(event)">..more</button>
+                                            </div>
+                                            <div class="row post-actions"><div class="post-action-tag">Upvote</div><div class="post-action-tag">Bookmark</div><div class="post-action-tag">Share</div><div class="post-action-tag">Report</div><div class="verify-button "> <div><span class="tick">&#x2714;</span>Verify</div></div></div>
+
+                                        </div>
+
+
+                                    </div>
+
+                                </div>
+                                <div class="row feed-post">
+                                    <div class="col">
+                                        <div class="col feed-post-question">
+                                            <div class="question-header red-header">Question</div>
+                                            <div class="question-content">Did you any time face driver cancellation or non availability of cars?</div>
+                                        </div>
+
+                                        <div class=" feed-post-answer">
+                                            <div class="answer-header red-header">Answer</div>
+                                            <div class="row answerer"><div class="answerer-info row"><div class="answerer-image">
+                                                <img src="https://scontent.fbho1-1.fna.fbcdn.net/v/t1.0-1/p160x160/16730131_1257021167686782_3712355408147196725_n.jpg?oh=04f5aa9dd21935bf6976c870639a35c3&oe=5B390FC9" alt=""></div>
+                                                <div class="answerer-details col"><span class="answerer-name">Aman Rathore</span><span class="answerer-others">Impact</span></div></div><div ><span class="red-header answerer-follow">Follow</span></div>
+                                            </div>
+                                            <div class="answer-content"><p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Amet, asperiores assumenda beatae eligendi expedita id illum in inventore iste laboriosam nesciunt nobis nostrum optio pariatur quam quasi quibusdam totam vel.</p>
+                                                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Architecto consequatur, consequuntur eius explicabo natus sed suscipit! Asperiores commodi eos, fugiat illum ipsum laudantium necessitatibus provident quae, quasi rem vitae voluptate.</p>
+                                                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusantium aliquid, assumenda culpa cumque earum, error esse ex excepturi necessitatibus quo recusandae reiciendis repudiandae soluta temporibus, unde vitae voluptas voluptates! Libero?
+                                                    Lorem ipsum dolor sit amet, consectetur adipisicing elit. Alias aliquam amet consequatur, eaque eligendi esse fugiat illum libero nesciunt placeat quo tempore, voluptatum. Asperiores error explicabo ratione rem totam voluptate?</p>
+                                                <button class="more-button" onclick="expandAnswer(event)">..more</button>
+                                            </div>
+                                            <div class="row post-actions"><div class="post-action-tag">Upvote</div><div class="post-action-tag">Bookmark</div><div class="post-action-tag">Share</div><div class="post-action-tag">Report</div><div class="verify-button "> <div><span class="tick">&#x2714;</span>Verify</div></div></div>
+
+                                        </div>
+
+
+                                    </div>
+
+                                </div>
+                                <div class="row feed-post">
+                                    <div class="col">
+                                        <div class="col feed-post-question">
+                                            <div class="question-header red-header">Question</div>
+                                            <div class="question-content">Did you any time face driver cancellation or non availability of cars?</div>
+                                        </div>
+
+                                        <div class=" feed-post-answer">
+                                            <div class="answer-header red-header">Answer</div>
+                                            <div class="row answerer"><div class="answerer-info row"><div class="answerer-image">
+                                                <img src="https://scontent.fbho1-1.fna.fbcdn.net/v/t1.0-1/p160x160/16730131_1257021167686782_3712355408147196725_n.jpg?oh=04f5aa9dd21935bf6976c870639a35c3&oe=5B390FC9" alt=""></div>
+                                                <div class="answerer-details col"><span class="answerer-name">Aman Rathore</span><span class="answerer-others">Impact</span></div></div><div ><span class="red-header answerer-follow">Follow</span></div>
+                                            </div>
+                                            <div class="answer-content"><p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Amet, asperiores assumenda beatae eligendi expedita id illum in inventore iste laboriosam nesciunt nobis nostrum optio pariatur quam quasi quibusdam totam vel.</p>
+                                                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Architecto consequatur, consequuntur eius explicabo natus sed suscipit! Asperiores commodi eos, fugiat illum ipsum laudantium necessitatibus provident quae, quasi rem vitae voluptate.</p>
+                                                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusantium aliquid, assumenda culpa cumque earum, error esse ex excepturi necessitatibus quo recusandae reiciendis repudiandae soluta temporibus, unde vitae voluptas voluptates! Libero?
+                                                    Lorem ipsum dolor sit amet, consectetur adipisicing elit. Alias aliquam amet consequatur, eaque eligendi esse fugiat illum libero nesciunt placeat quo tempore, voluptatum. Asperiores error explicabo ratione rem totam voluptate?</p>
+                                                <button class="more-button" onclick="expandAnswer(event)">..more</button>
+                                            </div>
+                                            <div class="row post-actions"><div class="post-action-tag">Upvote</div><div class="post-action-tag">Bookmark</div><div class="post-action-tag">Share</div><div class="post-action-tag">Report</div><div class="verify-button "> <div><span class="tick">&#x2714;</span>Verify</div></div></div>
+
+                                        </div>
+
+
+                                    </div>
+
+                                </div>
+                                <div class="row feed-post">
+                                    <div class="col">
+                                        <div class="col feed-post-question">
+                                            <div class="question-header red-header">Question</div>
+                                            <div class="question-content">Did you any time face driver cancellation or non availability of cars?</div>
+                                        </div>
+
+                                        <div class=" feed-post-answer">
+                                            <div class="answer-header red-header">Answer</div>
+                                            <div class="row answerer"><div class="answerer-info row"><div class="answerer-image">
+                                                <img src="https://scontent.fbho1-1.fna.fbcdn.net/v/t1.0-1/p160x160/16730131_1257021167686782_3712355408147196725_n.jpg?oh=04f5aa9dd21935bf6976c870639a35c3&oe=5B390FC9" alt=""></div>
+                                                <div class="answerer-details col"><span class="answerer-name">Aman Rathore</span><span class="answerer-others">Impact</span></div></div><div ><span class="red-header answerer-follow">Follow</span></div>
+                                            </div>
+                                            <div class="answer-content"><p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Amet, asperiores assumenda beatae eligendi expedita id illum in inventore iste laboriosam nesciunt nobis nostrum optio pariatur quam quasi quibusdam totam vel.</p>
+                                                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Architecto consequatur, consequuntur eius explicabo natus sed suscipit! Asperiores commodi eos, fugiat illum ipsum laudantium necessitatibus provident quae, quasi rem vitae voluptate.</p>
+                                                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusantium aliquid, assumenda culpa cumque earum, error esse ex excepturi necessitatibus quo recusandae reiciendis repudiandae soluta temporibus, unde vitae voluptas voluptates! Libero?
+                                                    Lorem ipsum dolor sit amet, consectetur adipisicing elit. Alias aliquam amet consequatur, eaque eligendi esse fugiat illum libero nesciunt placeat quo tempore, voluptatum. Asperiores error explicabo ratione rem totam voluptate?</p>
+                                                <button class="more-button" onclick="expandAnswer(event)">..more</button>
+                                            </div>
+                                            <div class="row post-actions"><div class="post-action-tag">Upvote</div><div class="post-action-tag">Bookmark</div><div class="post-action-tag">Share</div><div class="post-action-tag">Report</div><div class="verify-button "> <div><span class="tick">&#x2714;</span>Verify</div></div></div>
+
+                                        </div>
+
+
+                                    </div>
+
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="col right-menu">
+                        <div class="col">
+                            <div class="row category">
+                                <div class="col">
+                                    <div class="category-header">
+                                        <span class="red-header">Your Library</span>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col categories">
+                                            <ul>
+                                                <li><a href="" class="red-option">IIT Kanpur</a></li>
+                                                <li><a href="" class="red-option">Impact</a></li>
+                                                <li><a href="" class="red-option">Hansraj</a></li>
+
+                                            </ul>
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+
+
+
+            </div>
+
+        </div>
+
+
+
+
+
+</body>
+
+<script type="text/javascript" src="notifs.js"></script>
+<script type="text/javascript" src="displayfeed.js"></script>
+<script type="text/javascript" src="askquestion.js"></script>
+
+</html>

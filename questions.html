@@ -1,0 +1,797 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Group Study</title>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/4.12.0/firebase.js"></script>
+    <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+    <script src="https://trix-editor.org/js/trix.js"></script>
+    <link rel="stylesheet" href="https://trix-editor.org/css/trix.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mousetrap/1.4.6/mousetrap.min.js"></script>
+    <script src="//code.jquery.com/jquery-1.10.2.js"></script>
+    <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+    <link rel="stylesheet" href="css/style.css">
+
+    <script>
+        // Initialize Firebase
+        var config = {
+            apiKey: "AIzaSyCGwG7E3A8fuafiSyJmEW4ssy2sf2JxUvI",
+            authDomain: "my-project-1515396851668.firebaseapp.com",
+            databaseURL: "https://my-project-1515396851668.firebaseio.com",
+            projectId: "my-project-1515396851668",
+            storageBucket: "my-project-1515396851668.appspot.com",
+            clientId:"983531817565-llovm55vp61va25jg4sevs4jpige0ekp.apps.googleusercontent.com",
+            messagingSenderId: "983531817565",
+            scopes:[
+                'profile',
+                'email',
+                'photoURL'
+            ]
+
+        };
+        firebase.initializeApp(config);
+
+    </script>
+    <script src="gs.js"></script>
+</head>
+<body>
+<div class="question-modal">
+    <div class="question-form-container">
+        <div class="row Ask-question">
+            <div class="col">
+                <div class="row Ask-question">
+                    <div class="col">
+                        <div class="row question-container">
+                            <div></div>
+                            <div class="row question-bar">
+                                <!--<input type="text" id="ask" name="ask-question" placeholder="Anything to ask?">-->
+                                <div class="question-user-image"><img src="" alt=""></div>
+                                <div class="question-bar-content">
+                                    <div id="ask" aria-describedby="What's on your mind?" role="textbox" contenteditable="true" aria-placeholder="Anything to ask?" aria-multiline="true"
+                                    >
+
+                                    </div>
+                                    <div>Anything to ask?</div>
+                                    <label for="ask">Do you have any doubt?Ask your question here</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="question-footer">
+                            <div id="question-tags">
+
+                            </div>
+                            <div class="row">
+                                <div class="add-tags">
+                                    <input type="text" list="subjects-list" placeholder="+Add Tags" id="question-tag-input">
+                                    <datalist id="subjects-list">
+                                        <option value="Maths"></option>
+                                        <option value="Physics"></option>
+                                        <option value="Chemistry"></option>
+                                        <option value="Arts"></option>
+                                        <option value="Commerce"></option>
+                                    </datalist>
+                                    <button id="addtag-btn">+</button>
+                                </div>
+                                <button id="ask-button" type="submit">Submit</button></div>
+                        </div>
+
+
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+<div class="container">
+    <div class="row header">
+        <div class="header-site-logo">
+            <a href=""><img src="images/gs-icon.png" alt=""></a>
+        </div>
+        <div class="row header-nav">
+            <div class="row header-nav-links">
+                <ul class="row header-nav-links-list">
+                    <li class="active"><a href="index.html">Home</a></li>
+                    <li class=""><a href="groups.html">Groups</a></li>
+                    <li class=""><a href="questions.html">Questions</a></li>
+                </ul>
+            </div>
+            <div class="row header-nav-search">
+                <div class="row header-nav-search-bar">
+                    <input type="text" id="search" name="search" placeholder="Search">
+                    <label for="search"><img src="data:image/svg+xml;utf8;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iaXNvLTg4NTktMSI/Pgo8IS0tIEdlbmVyYXRvcjogQWRvYmUgSWxsdXN0cmF0b3IgMTkuMS4wLCBTVkcgRXhwb3J0IFBsdWctSW4gLiBTVkcgVmVyc2lvbjogNi4wMCBCdWlsZCAwKSAgLS0+CjxzdmcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayIgdmVyc2lvbj0iMS4xIiBpZD0iQ2FwYV8xIiB4PSIwcHgiIHk9IjBweCIgdmlld0JveD0iMCAwIDQ1MSA0NTEiIHN0eWxlPSJlbmFibGUtYmFja2dyb3VuZDpuZXcgMCAwIDQ1MSA0NTE7IiB4bWw6c3BhY2U9InByZXNlcnZlIiB3aWR0aD0iMTZweCIgaGVpZ2h0PSIxNnB4Ij4KPGc+Cgk8cGF0aCBkPSJNNDQ3LjA1LDQyOGwtMTA5LjYtMTA5LjZjMjkuNC0zMy44LDQ3LjItNzcuOSw0Ny4yLTEyNi4xQzM4NC42NSw4Ni4yLDI5OC4zNSwwLDE5Mi4zNSwwQzg2LjI1LDAsMC4wNSw4Ni4zLDAuMDUsMTkyLjMgICBzODYuMywxOTIuMywxOTIuMywxOTIuM2M0OC4yLDAsOTIuMy0xNy44LDEyNi4xLTQ3LjJMNDI4LjA1LDQ0N2MyLjYsMi42LDYuMSw0LDkuNSw0czYuOS0xLjMsOS41LTQgICBDNDUyLjI1LDQ0MS44LDQ1Mi4yNSw0MzMuMiw0NDcuMDUsNDI4eiBNMjYuOTUsMTkyLjNjMC05MS4yLDc0LjItMTY1LjMsMTY1LjMtMTY1LjNjOTEuMiwwLDE2NS4zLDc0LjIsMTY1LjMsMTY1LjMgICBzLTc0LjEsMTY1LjQtMTY1LjMsMTY1LjRDMTAxLjE1LDM1Ny43LDI2Ljk1LDI4My41LDI2Ljk1LDE5Mi4zeiIgZmlsbD0iIzAwMDAwMCIvPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+Cjwvc3ZnPgo=" /></label> </div>
+            </div>
+        </div>
+
+        <div class="header-user">
+            <div id="notification_button">
+                <div class="header-user-image"><img src="./icons/notification_icon.png" class="notif_icon" alt="" >
+                    <div class="header-user-notif col">
+                        <div class="notification_container">
+                            <div class="row notification_heading ">
+                                <span>Notifications</span>
+                            </div>
+                            <div class="more_notif"></div>
+                            <div class="new">
+                                <div class="new_heading">Newest</div>
+                            </div>
+                            <div class="earlier">
+                                <div class="earlier_heading">Earlier</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="header-user-image"><a href="user-profile.html"><img class="user-image" src="https://scontent.fbho1-1.fna.fbcdn.net/v/t1.0-1/p160x160/16730131_1257021167686782_3712355408147196725_n.jpg?oh=04f5aa9dd21935bf6976c870639a35c3&oe=5B390FC9" alt=""></a><div class="header-user-action col"><div>Logout</div><div>My Profile</div></div></div>
+        </div>
+    </div>
+    <div class="col main-container">
+        <div class="row">
+            <div class="col left-menu">
+                <div class="col">
+                    <div class="row category">
+                        <div class="col">
+                            <div class="category-header">
+                                <span class="red-header">Favourite Groups</span>
+                            </div>
+                            <div class="row">
+                                <div class="col categories">
+                                    <ul>
+                                        <li class="row"><a href="" class="red-option">IIT Kanpur</a></li>
+                                        <li class="row"><a href="" class="red-option">Impact</a></li>
+                                        <li class="row"><a href="" class="red-option">Hansraj</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row category">
+                        <div class="col">
+                            <div class="category-header">
+                                <span class="red-header">Following</span>
+                                <span id="feed-filter">Submit</span>
+                            </div>
+                            <div class="row">
+                                <div class="col categories" >
+                                    <ul id="select-subject-buttons">
+                                        <li class="row"><a href="" class="red-option">Business Stud</a><span><input class="question-subject" type="checkbox" id="Business Stud" value="Business Stud"><label for="Business Stud"></label></span></li>
+                                        <li class="row"><a href="" class="red-option">Calculus</a><span><input type="checkbox" class="question-subject" id="Calculus" value="Calculus"><label class="question-subject-label" for="Calculus"></label></span></li>
+                                        <li class="row"><a href="" class="red-option">Chemistry</a><span><input type="checkbox" class="question-subject" id="Chemistry" value="Chemistry"><label class="question-subject-label" for="Chemistry"></label></span></li>
+                                        <li class="row"><a href="" class="red-option">Civics</a><span><input type="checkbox" class="question-subject" id="Civics" value="Civics"><label class="question-subject-label" for="Civics"></label></span></li>
+                                        <li class="row"><a href="" class="red-option">Commerce</a><span><input type="checkbox" class="question-subject" id="Commerce" value="Commerce"><label class="question-subject-label" for="Commerce"></label></span></li>
+                                        <li class="row"><a href="" class="red-option">Computer</a><span><input type="checkbox" class="question-subject" id="Computer" value="Computer"><label class="question-subject-label" for="Computer"></label></span></li>
+
+                                    </ul>
+                                </div>
+
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col feed">
+                <div class="row">
+                    <div class="col feed-container" id="display-questions">
+                        <div class="row feed-post">
+                            <div class="col">
+                                <div class="col feed-post-question" data-role="xyz">
+                                    <div class="question-header red-header">Question</div>
+                                    <div class="question-content">Did you any time face driver cancellation or non availability of cars?
+                                    lorem</div>
+                                    <div class="question-action">
+                                        <button class="red-header answer-button" data-tagid1="Maths" data-qid="xyz" data-tagid="Maths">Answer</button>
+                                        <button class="red-header">Follow</button>
+                                        <button class="red-header">Request</button>
+                                    </div>
+                                    <div class="answer-container">
+                                        <div>
+                                            <div class="answerer">
+                                                <div class="row">
+                                                    <img class="user-image" src="" alt="" style="width:50px;height:50px;border-radius: 25px;background-color: #aaaaaa">
+                                                    <div class="col">
+                                                        <span class="user-name">Aman Rathore</span>
+                                                        <span class="user-school">Bhopal</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div>
+                                                <form class="answer-form" method="post" action="store-answer.php">
+                                                    <input id="x" type="hidden" name="content">
+                                                    <trix-editor input="x"></trix-editor>
+                                                    <div class="answer-action">
+                                                        <button class="cancel-answer-button">Cancel</button><button class="answer-submit-button" type="submit" data-qid="1212" data-tagid1="Maths">Submit</button>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                            <div class="col request_container" >
+                                                <div class="request_tags">
+                                                    <div>
+
+                                                    </div>
+                                                </div>
+                                                <div class="ui-widget" >
+                                                    <label for="autosuggest"><img src="icons/user.svg" alt=""></label>
+                                                    <input type="text" id="autosuggest" value="">
+                                                    <input type="hidden" id="autosuggestid" value="">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row feed-post">
+                            <div class="col">
+                                <!--<div class="ui-widget">-->
+                                    <!--<label for="autosuggest">autosuggest </label>-->
+                                    <!--<input type="text" id="autosuggest" value="">-->
+                                    <!--<input type="hidden" id="autosuggestid" value="">-->
+                                <!--</div>-->
+                                <div>
+                                    <span id="desc"></span>
+                                </div>
+
+
+
+                            </div>
+                        </div>
+                        <div class="row feed-post">
+                            <div class="col">
+                                <div class="col feed-post-question">
+                                    <div class="question-header red-header">Question</div>
+                                    <div class="question-content">Did you any time face driver cancellation or non availability of cars?</div>
+                                    <div class="question-action"><span class="red-header">Answer</span><span class="red-header">Follow</span><span class="red-header">Request</span></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row feed-post">
+                            <div class="col">
+                                <div class="col feed-post-question">
+                                    <div class="question-header red-header">Question</div>
+                                    <div class="question-content">Did you any time face driver cancellation or non availability of cars?</div>
+                                    <div class="question-action"><span class="red-header">Answer</span><span class="red-header">Follow</span><span class="red-header">Request</span></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row feed-post">
+                            <div class="col">
+                                <div class="col feed-post-question">
+                                    <div class="question-header red-header">Question</div>
+                                    <div class="question-content">Did you any time face driver cancellation or non availability of cars?</div>
+                                    <div class="question-action"><span class="red-header">Answer</span><span class="red-header">Follow</span><span class="red-header">Request</span></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row feed-post">
+                            <div class="col">
+                                <div class="col feed-post-question">
+                                    <div class="question-header red-header">Question</div>
+                                    <div class="question-content">Did you any time face driver cancellation or non availability of cars?</div>
+                                    <div class="question-action"><span class="red-header">Answer</span><span class="red-header">Follow</span><span class="red-header">Request</span></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row feed-post">
+                            <div class="col">
+                                <div class="col feed-post-question">
+                                    <div class="question-header red-header">Question</div>
+                                    <div class="question-content">Did you any time face driver cancellation or non availability of cars?</div>
+                                    <div class="question-action"><span class="red-header">Answer</span><span class="red-header">Follow</span><span class="red-header">Request</span></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row feed-post">
+                            <div class="col">
+                                <div class="col feed-post-question">
+                                    <div class="question-header red-header">Question</div>
+                                    <div class="question-content">Did you any time face driver cancellation or non availability of cars?</div>
+                                    <div class="question-action"><span class="red-header">Answer</span><span class="red-header">Follow</span><span class="red-header">Request</span></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row feed-post">
+                            <div class="col">
+                                <div class="col feed-post-question">
+                                    <div class="question-header red-header">Question</div>
+                                    <div class="question-content">Did you any time face driver cancellation or non availability of cars?</div>
+                                    <div class="question-action"><span class="red-header">Answer</span><span class="red-header">Follow</span><span class="red-header">Request</span></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row feed-post">
+                            <div class="col">
+                                <div class="col feed-post-question">
+                                    <div class="question-header red-header">Question</div>
+                                    <div class="question-content">Did you any time face driver cancellation or non availability of cars?</div>
+                                    <div class="question-action"><span class="red-header">Answer</span><span class="red-header">Follow</span><span class="red-header">Request</span></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row feed-post">
+                            <div class="col">
+                                <div class="col feed-post-question">
+                                    <div class="question-header red-header">Question</div>
+                                    <div class="question-content">Did you any time face driver cancellation or non availability of cars?</div>
+                                    <div class="question-action"><span class="red-header">Answer</span><span class="red-header">Follow</span><span class="red-header">Request</span></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row feed-post">
+                            <div class="col">
+                                <div class="col feed-post-question">
+                                    <div class="question-header red-header">Question</div>
+                                    <div class="question-content">Did you any time face driver cancellation or non availability of cars?</div>
+                                    <div class="question-action"><span class="red-header">Answer</span><span class="red-header">Follow</span><span class="red-header">Request</span></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row feed-post">
+                            <div class="col">
+                                <div class="col feed-post-question">
+                                    <div class="question-header red-header">Question</div>
+                                    <div class="question-content">Did you any time face driver cancellation or non availability of cars?</div>
+                                    <div class="question-action"><span class="red-header">Answer</span><span class="red-header">Follow</span><span class="red-header">Request</span></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row feed-post">
+                            <div class="col">
+                                <div class="col feed-post-question">
+                                    <div class="question-header red-header">Question</div>
+                                    <div class="question-content">Did you any time face driver cancellation or non availability of cars?</div>
+                                    <div class="question-action"><span class="red-header">Answer</span><span class="red-header">Follow</span><span class="red-header">Request</span></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row feed-post">
+                            <div class="col">
+                                <div class="col feed-post-question">
+                                    <div class="question-header red-header">Question</div>
+                                    <div class="question-content">Did you any time face driver cancellation or non availability of cars?</div>
+                                    <div class="question-action"><span class="red-header">Answer</span><span class="red-header">Follow</span><span class="red-header">Request</span></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row feed-post">
+                            <div class="col">
+                                <div class="col feed-post-question">
+                                    <div class="question-header red-header">Question</div>
+                                    <div class="question-content">Did you any time face driver cancellation or non availability of cars?</div>
+                                    <div class="question-action"><span class="red-header">Answer</span><span class="red-header">Follow</span><span class="red-header">Request</span></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row feed-post">
+                            <div class="col">
+                                <div class="col feed-post-question">
+                                    <div class="question-header red-header">Question</div>
+                                    <div class="question-content">Did you any time face driver cancellation or non availability of cars?</div>
+                                    <div class="question-action"><span class="red-header">Answer</span><span class="red-header">Follow</span><span class="red-header">Request</span></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row feed-post">
+                            <div class="col">
+                                <div class="col feed-post-question">
+                                    <div class="question-header red-header">Question</div>
+                                    <div class="question-content">Did you any time face driver cancellation or non availability of cars?</div>
+                                    <div class="question-action"><span class="red-header">Answer</span><span class="red-header">Follow</span><span class="red-header">Request</span></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row feed-post">
+                            <div class="col">
+                                <div class="col feed-post-question">
+                                    <div class="question-header red-header">Question</div>
+                                    <div class="question-content">Did you any time face driver cancellation or non availability of cars?</div>
+                                    <div class="question-action"><span class="red-header">Answer</span><span class="red-header">Follow</span><span class="red-header">Request</span></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row feed-post">
+                            <div class="col">
+                                <div class="col feed-post-question">
+                                    <div class="question-header red-header">Question</div>
+                                    <div class="question-content">Did you any time face driver cancellation or non availability of cars?</div>
+                                    <div class="question-action"><span class="red-header">Answer</span><span class="red-header">Follow</span><span class="red-header">Request</span></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row feed-post">
+                            <div class="col">
+                                <div class="col feed-post-question">
+                                    <div class="question-header red-header">Question</div>
+                                    <div class="question-content">Did you any time face driver cancellation or non availability of cars?</div>
+                                    <div class="question-action"><span class="red-header">Answer</span><span class="red-header">Follow</span><span class="red-header">Request</span></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row feed-post">
+                            <div class="col">
+                                <div class="col feed-post-question">
+                                    <div class="question-header red-header">Question</div>
+                                    <div class="question-content">Did you any time face driver cancellation or non availability of cars?</div>
+                                    <div class="question-action"><span class="red-header">Answer</span><span class="red-header">Follow</span><span class="red-header">Request</span></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row feed-post">
+                            <div class="col">
+                                <div class="col feed-post-question">
+                                    <div class="question-header red-header">Question</div>
+                                    <div class="question-content">Did you any time face driver cancellation or non availability of cars?</div>
+                                    <div class="question-action"><span class="red-header">Answer</span><span class="red-header">Follow</span><span class="red-header">Request</span></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row feed-post">
+                            <div class="col">
+                                <div class="col feed-post-question">
+                                    <div class="question-header red-header">Question</div>
+                                    <div class="question-content">Did you any time face driver cancellation or non availability of cars?</div>
+                                    <div class="question-action"><span class="red-header">Answer</span><span class="red-header">Follow</span><span class="red-header">Request</span></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row feed-post">
+                            <div class="col">
+                                <div class="col feed-post-question">
+                                    <div class="question-header red-header">Question</div>
+                                    <div class="question-content">Did you any time face driver cancellation or non availability of cars?</div>
+                                    <div class="question-action"><span class="red-header">Answer</span><span class="red-header">Follow</span><span class="red-header">Request</span></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row feed-post">
+                            <div class="col">
+                                <div class="col feed-post-question">
+                                    <div class="question-header red-header">Question</div>
+                                    <div class="question-content">Did you any time face driver cancellation or non availability of cars?</div>
+                                    <div class="question-action"><span class="red-header">Answer</span><span class="red-header">Follow</span><span class="red-header">Request</span></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row feed-post">
+                            <div class="col">
+                                <div class="col feed-post-question">
+                                    <div class="question-header red-header">Question</div>
+                                    <div class="question-content">Did you any time face driver cancellation or non availability of cars?</div>
+                                    <div class="question-action"><span class="red-header">Answer</span><span class="red-header">Follow</span><span class="red-header">Request</span></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row feed-post">
+                            <div class="col">
+                                <div class="col feed-post-question">
+                                    <div class="question-header red-header">Question</div>
+                                    <div class="question-content">Did you any time face driver cancellation or non availability of cars?</div>
+                                    <div class="question-action"><span class="red-header">Answer</span><span class="red-header">Follow</span><span class="red-header">Request</span></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row feed-post">
+                            <div class="col">
+                                <div class="col feed-post-question">
+                                    <div class="question-header red-header">Question</div>
+                                    <div class="question-content">Did you any time face driver cancellation or non availability of cars?</div>
+                                    <div class="question-action"><span class="red-header">Answer</span><span class="red-header">Follow</span><span class="red-header">Request</span></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row feed-post">
+                            <div class="col">
+                                <div class="col feed-post-question">
+                                    <div class="question-header red-header">Question</div>
+                                    <div class="question-content">Did you any time face driver cancellation or non availability of cars?</div>
+                                    <div class="question-action"><span class="red-header">Answer</span><span class="red-header">Follow</span><span class="red-header">Request</span></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row feed-post">
+                            <div class="col">
+                                <div class="col feed-post-question">
+                                    <div class="question-header red-header">Question</div>
+                                    <div class="question-content">Did you any time face driver cancellation or non availability of cars?</div>
+                                    <div class="question-action"><span class="red-header">Answer</span><span class="red-header">Follow</span><span class="red-header">Request</span></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row feed-post">
+                            <div class="col">
+                                <div class="col feed-post-question">
+                                    <div class="question-header red-header">Question</div>
+                                    <div class="question-content">Did you any time face driver cancellation or non availability of cars?</div>
+                                    <div class="question-action"><span class="red-header">Answer</span><span class="red-header">Follow</span><span class="red-header">Request</span></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row feed-post">
+                            <div class="col">
+                                <div class="col feed-post-question">
+                                    <div class="question-header red-header">Question</div>
+                                    <div class="question-content">Did you any time face driver cancellation or non availability of cars?</div>
+                                    <div class="question-action"><span class="red-header">Answer</span><span class="red-header">Follow</span><span class="red-header">Request</span></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row feed-post">
+                            <div class="col">
+                                <div class="col feed-post-question">
+                                    <div class="question-header red-header">Question</div>
+                                    <div class="question-content">Did you any time face driver cancellation or non availability of cars?</div>
+                                    <div class="question-action"><span class="red-header">Answer</span><span class="red-header">Follow</span><span class="red-header">Request</span></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row feed-post">
+                            <div class="col">
+                                <div class="col feed-post-question">
+                                    <div class="question-header red-header">Question</div>
+                                    <div class="question-content">Did you any time face driver cancellation or non availability of cars?</div>
+                                    <div class="question-action"><span class="red-header">Answer</span><span class="red-header">Follow</span><span class="red-header">Request</span></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row feed-post">
+                            <div class="col">
+                                <div class="col feed-post-question">
+                                    <div class="question-header red-header">Question</div>
+                                    <div class="question-content">Did you any time face driver cancellation or non availability of cars?</div>
+                                    <div class="question-action"><span class="red-header">Answer</span><span class="red-header">Follow</span><span class="red-header">Request</span></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row feed-post">
+                            <div class="col">
+                                <div class="col feed-post-question">
+                                    <div class="question-header red-header">Question</div>
+                                    <div class="question-content">Did you any time face driver cancellation or non availability of cars?</div>
+                                    <div class="question-action"><span class="red-header">Answer</span><span class="red-header">Follow</span><span class="red-header">Request</span></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row feed-post">
+                            <div class="col">
+                                <div class="col feed-post-question">
+                                    <div class="question-header red-header">Question</div>
+                                    <div class="question-content">Did you any time face driver cancellation or non availability of cars?</div>
+                                    <div class="question-action"><span class="red-header">Answer</span><span class="red-header">Follow</span><span class="red-header">Request</span></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row feed-post">
+                            <div class="col">
+                                <div class="col feed-post-question">
+                                    <div class="question-header red-header">Question</div>
+                                    <div class="question-content">Did you any time face driver cancellation or non availability of cars?</div>
+                                    <div class="question-action"><span class="red-header">Answer</span><span class="red-header">Follow</span><span class="red-header">Request</span></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row feed-post">
+                            <div class="col">
+                                <div class="col feed-post-question">
+                                    <div class="question-header red-header">Question</div>
+                                    <div class="question-content">Did you any time face driver cancellation or non availability of cars?</div>
+                                    <div class="question-action"><span class="red-header">Answer</span><span class="red-header">Follow</span><span class="red-header">Request</span></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row feed-post" id="content-loader">
+                            <img src="../GroupStudy/images/contentplaceholder.gif" alt="">
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            <div class="col right-menu">
+                <div class="col">
+                    <div class="row category">
+                        <div class="col">
+                            <div class="category-header">
+                                <span class="red-header">Your Library</span>
+                            </div>
+                            <div class="row">
+                                <div class="col categories">
+                                    <ul>
+                                        <li><a href="" class="red-option">IIT Kanpur</a></li>
+                                        <li><a href="" class="red-option">Impact</a></li>
+                                        <li><a href="" class="red-option">Hansraj</a></li>
+
+                                    </ul>
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+<div class="question_request">
+    <div class="request_container">
+        <div>
+
+        </div>
+
+    </div>
+</div>
+<script src="gs.js"></script>
+<script type="text/javascript" src="notifs.js"></script>
+
+<script src="questionfilter.js"></script>
+<script src="answer.js"></script>
+<script src="request.js"></script>
+
+<!--<script>-->
+    <!--$('#autosuggest').on('keypress keyup keydown',function(e){-->
+        <!--console.log($(this).val());-->
+        <!--$("#autocomplete-ui").html("");-->
+        <!--$.ajax({-->
+            <!--url:'auto-suggestion.php',-->
+            <!--type:'get',-->
+            <!--data:{-->
+                <!--'term':$(this).val()-->
+            <!--},-->
+            <!--success:function(result){-->
+                <!--result  = JSON.parse(result);-->
+                <!--console.log();-->
+                <!--$("#autocomplete-ui").css('display','inline-block');-->
+                    <!--console.log(result.length);-->
+                <!--var j = 0;-->
+                <!--while(j<result.length){-->
+                    <!--var option_template = '<li data-userid="'+result[j]["uniqueid"]+'">'+result[j]["name"]+'</li>';-->
+                    <!--console.log(option_template);-->
+                    <!--$('#autocomplete-ui').append(option_template);-->
+                    <!--j++;-->
+                <!--}-->
+
+            <!--}-->
+        <!--});-->
+    <!--});-->
+    <!--$('#autosuggest').blur(function(){-->
+        <!--$("#autocomplete-ui").css('display','none');-->
+    <!--})-->
+<!--</script>-->
+<script>
+    var requested_usertag = [];
+    $(document).on('focus','#autosuggest',function(){
+        $(document).ready(
+            $("#autosuggest").autocomplete({
+                source:function(request, response) {
+                    $.ajax({
+                        type:'get',
+                        url: "auto-suggestion.php",
+                        data: {
+                            'term':request.term
+                        },
+                        dataType: 'json',
+                        success:(function(data) {
+                            var results = $.map(data, function(item) {
+                                return {
+                                    label:item.name,
+                                    value:item.uniqueid,
+                                    desc:item.photourl
+                                }
+                            });
+                            console.log(results);
+                            response(results);
+                        })
+                    });
+                },
+                appendTo:'.ui-widget',
+                position: { my : "left top", at: "left bottom" },
+                cacheLength: 0,
+                delay:1000,
+
+                focus: function( event, ui ) {
+                    // What happens when an autocomplete result is focused on
+                    $("#autosuggest").val(ui.item.label);
+                    // $("#desc").html('<img class="list_item_image" style="display:block;height:40px;width:40px;border-radius:20px;" src="'+ui.item.desc+'">');
+                    return false;
+                },
+                select: function ( event, ui ) {
+                    // What happens when an autocomplete result is selected
+                    // event.preventDefault();
+                    console.log(ui.item.label+" "+ui.item.value);
+                    $("#autosuggestid").val(ui.item.value);
+                    $("#desc").html('<img class="list_item_image" style="display:block;height:40px;width:40px;border-radius:20px;" src="'+ui.item.desc+'">');
+                    $("#autosuggest").val("");
+                    requested_usertag.push(ui.item);
+                    console.log(requested_usertag);
+                    event.preventDefault();
+                    display_requested_tag(requested_usertag);
+
+                },_renderItem: function( ul, item ) {
+                    return $('<li><img class="list_item_image" style="display:block;height:40px;width:40px;border-radius:20px;" src="'+ui.item.desc+'"><span>'+ui.item.label+'</span></li>');
+                }
+
+            }).data( "ui-autocomplete" )._renderItem = function( ul, item ) {
+                var inner_html = '<a href="' + item.desc + '" >' +
+                    '<div class="list_item_container"><img style="display:inline;height:30px;width:30px;border-radius:20px;" src="' + item.desc + '" ><span class="list_item_name"><b>' + item.label + '</b></span></div></a>';
+                return $( "<li></li>" )
+                    .data( "item.autocomplete", item )
+                    .append(inner_html)
+                    .appendTo( ul );
+            }
+        );
+    });
+    function display_requested_tag(tagdata){
+        var j=0;
+        $('.requested_users').html("");
+        while(j<tagdata.length){
+            $(".requested_users").append("<div class='requested_user_tag'><img class='list_item_image' src='"+tagdata[j].desc+"'alt=''><span>"+tagdata[j].label+"</span> <span class='delete_tag' data-id='"+tagdata[j].value+"'>x</span></div>");
+            j++;
+        }
+    }
+    $(document).on('click','.delete_tag',function(){
+        var i=0;
+        var data = [];
+
+        while(i<requested_usertag.length){
+            if(requested_usertag[i].value !== $(this).attr('data-id')){
+                data.push(requested_usertag[i]);
+
+            }
+            i++;
+        }
+        requested_usertag = data;
+        display_requested_tag(requested_usertag);
+    });
+    $(document).on('click','.request_submit_button',function(){
+        if(requested_usertag.length>0){
+            var i=0;
+            var ids = [];
+            while(i<requested_usertag.length){
+                if(requested_usertag[i].value !== $(this).attr('data-id')){
+                    ids.push(requested_usertag[i].value);
+                }
+                i++;
+            }
+            $.ajax({
+                url:'../GroupStudy/answer-request.php',
+                type:'post',
+                data:{
+                    'ids':JSON.stringify(ids),
+                    'qid':$(this).attr('data-qid')
+                },
+                success:function (result) {
+                    console.log(result);
+                }
+            });
+            console.log(JSON.stringify(requested_usertag));
+            // $('.request_container').css('opacity','1');
+            var selec = ".request_container[data-qid='"+$(this).attr('data-qid')+"']";
+            $(selec).html('<div class="toast-notifier">Your Request has been submitted</div>');
+            $(selec+" .toast-notifier").css('display','flex');
+            setInterval(function(){
+                $(selec+" .toast-notifier").css('display','none');
+            },1000);
+
+    }
+    });
+</script>
+<script>
+    Mousetrap.bind('esc', function() {
+    alert('esc was pressed')
+});
+
+addEventListener('keydown', function(event) {
+    if (event.keyCode === 27) {
+        alert('esc was pressed, really')
+    }
+});
+</script>
+</body>
+</html>

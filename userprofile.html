@@ -1,0 +1,400 @@
+<?php
+    session_start();
+    include 'config.php';
+
+?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Group Study</title>
+    <link rel="stylesheet" href="css/style.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/4.12.0/firebase.js"></script>
+
+    <script>
+        // Initialize Firebase
+        var config = {
+            apiKey: "AIzaSyCGwG7E3A8fuafiSyJmEW4ssy2sf2JxUvI",
+            authDomain: "my-project-1515396851668.firebaseapp.com",
+            databaseURL: "https://my-project-1515396851668.firebaseio.com",
+            projectId: "my-project-1515396851668",
+            storageBucket: "my-project-1515396851668.appspot.com",
+            clientId:"983531817565-llovm55vp61va25jg4sevs4jpige0ekp.apps.googleusercontent.com",
+            messagingSenderId: "983531817565",
+            scopes:[
+                'profile',
+                'email'
+            ]
+
+        };
+        firebase.initializeApp(config);
+
+    </script>
+    <script src="gs.js"></script>
+</head>
+<body>
+<div class="modal_container">
+    <div class="modal">
+        <div class="form_container">
+            <div class="form_heading">User Details</div>
+            <form >
+                <div class="userdetails"><input type="text" id="name" placeholder="Username"><label for="name">Name</label></div>
+                <div class="userdetails"><input type="text" id="tagline" placeholder="Tagline"><label for="tagline">Tagline</label></div>
+                <div class="userdetails"><input type="text" id="city" placeholder="City"><label for="city" >City</label></div>
+                <div class="userdetails"><input type="date" id="dob" placeholder="Date of Birth"><label for="dob" >Date of Birth</label></div>
+                <div class="userdetails"><input type="text" id="gender" placeholder="Gender"><label for="gender">Gender</label></div>
+                <div class="userdetails"><input type="text" id="phoneno" placeholder="Phoneno"><label for="phoneno" >Phoneno</label></div>
+
+                <div class="userdetails"><input type="text" id="country" placeholder="Country"><label for="country" >Country</label></div>
+                <div class="userdetails"><submit type="submit" class="save_details_button">Save</submit> <button class="cancel_details_edit">Cancel</button></div>
+            </form>
+        </div>
+
+    </div>
+
+</div>
+<div class="container">
+
+    <div class="row header">
+        <div class="header-site-logo">
+            <a href=""><img src="images/gs-icon.png" alt=""></a>
+        </div>
+        <div class="row header-nav">
+            <div class="row header-nav-links">
+                <ul class="row header-nav-links-list">
+                    <li class="active"><a href="index.html">Home</a></li>
+                    <li class=""><a href="groups.html">Groups</a></li>
+                    <li class=""><a href="questions.html">Questions</a></li>
+                </ul>
+            </div>
+            <div class="row header-nav-search">
+                <div class="row header-nav-search-bar">
+                    <input type="text" id="search" name="search" placeholder="Search">
+                    <label for="search"><img src="data:image/svg+xml;utf8;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iaXNvLTg4NTktMSI/Pgo8IS0tIEdlbmVyYXRvcjogQWRvYmUgSWxsdXN0cmF0b3IgMTkuMS4wLCBTVkcgRXhwb3J0IFBsdWctSW4gLiBTVkcgVmVyc2lvbjogNi4wMCBCdWlsZCAwKSAgLS0+CjxzdmcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayIgdmVyc2lvbj0iMS4xIiBpZD0iQ2FwYV8xIiB4PSIwcHgiIHk9IjBweCIgdmlld0JveD0iMCAwIDQ1MSA0NTEiIHN0eWxlPSJlbmFibGUtYmFja2dyb3VuZDpuZXcgMCAwIDQ1MSA0NTE7IiB4bWw6c3BhY2U9InByZXNlcnZlIiB3aWR0aD0iMTZweCIgaGVpZ2h0PSIxNnB4Ij4KPGc+Cgk8cGF0aCBkPSJNNDQ3LjA1LDQyOGwtMTA5LjYtMTA5LjZjMjkuNC0zMy44LDQ3LjItNzcuOSw0Ny4yLTEyNi4xQzM4NC42NSw4Ni4yLDI5OC4zNSwwLDE5Mi4zNSwwQzg2LjI1LDAsMC4wNSw4Ni4zLDAuMDUsMTkyLjMgICBzODYuMywxOTIuMywxOTIuMywxOTIuM2M0OC4yLDAsOTIuMy0xNy44LDEyNi4xLTQ3LjJMNDI4LjA1LDQ0N2MyLjYsMi42LDYuMSw0LDkuNSw0czYuOS0xLjMsOS41LTQgICBDNDUyLjI1LDQ0MS44LDQ1Mi4yNSw0MzMuMiw0NDcuMDUsNDI4eiBNMjYuOTUsMTkyLjNjMC05MS4yLDc0LjItMTY1LjMsMTY1LjMtMTY1LjNjOTEuMiwwLDE2NS4zLDc0LjIsMTY1LjMsMTY1LjMgICBzLTc0LjEsMTY1LjQtMTY1LjMsMTY1LjRDMTAxLjE1LDM1Ny43LDI2Ljk1LDI4My41LDI2Ljk1LDE5Mi4zeiIgZmlsbD0iIzAwMDAwMCIvPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+Cjwvc3ZnPgo=" /></label> </div>
+            </div>
+        </div>
+        <div class="header-user">
+            <div id="notification_button">
+                <div class="header-user-image"><img src="./icons/notification_icon.png" class="notif_icon" alt="" >
+                    <div class="header-user-notif col">
+                        <div class="notification_container">
+                            <div class="row notification_heading ">
+                                <span>Notifications</span>
+                            </div>
+                            <div class="more_notif"></div>
+                            <div class="new">
+                                <div class="new_heading">Newest</div>
+                            </div>
+                            <div class="earlier">
+                                <div class="earlier_heading">Earlier</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="header-user-image"><a href="#"><img id="userimage" src="" alt=""></a>
+                <div class="header-user-action col"><div><button class="logoutbtn" onclick="signout()" >Logout</button></div><div></div></div></div>
+        </div>
+    </div>
+    <div class="col main-container">
+        <div class="row">
+            <div class="col left-menu">
+                <div class="col">
+                    <div class="row category">
+                        <div class="col">
+                            <div class="category-header">
+                                <span class="red-header">Questions</span>
+                            </div>
+                            <div class="row">
+                                <div class="col categories">
+                                    <ul>
+                                        <li class="row"><a href="" class="red-option">Asked</a></li>
+                                        <li class="row"><a href="" class="red-option">Answered</a></li>
+
+
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row category followers">
+                        <div class="col">
+                            <div class="category-header">
+                                <span class="red-header">Followers</span>
+                                <span class="red-header followers-count">+2</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row category ">
+                        <div class="col">
+                            <div class="category-header">
+                                <span class="red-header">Notifications</span>
+                                <span class="red-header notification-count">+6</span>
+                            </div>
+                            <div class="row">
+                                <div class="col categories">
+                                    <ul>
+                                        <li class="row notifi"><a href="" class="red-option">Your question for universe is answered by Pradumn</a></li>
+                                        <li class="row notifi"><a href="" class="red-option">Shreya tripathi upvoted your answer "Moon is the.."</a></li>
+                                        <li class="row notifi"><a href="" class="red-option">Pradumn Davey started following you</a></li>
+                                        <li class="row notifi"><a href="" class="red-option">Bruce wayne has requested to answer his question</a></li>
+                                        <li class="row notifi"><a href="" class="red-option">Emma Watson started following you</a></li>
+                                        <li class="row notifi"><a href="" class="red-option">Tony stark started following you</a></li>
+
+                                    </ul>
+                                </div>
+
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col feed">
+                <div class="row">
+                    <div class="col feed-container">
+
+                        <div>
+                            <div class="row feed-post">
+                                <div class="col">
+                                    <div class="profile-head">
+                                        <div class="row">
+                                            <div class="col ">
+                                                <div class="col profile-pic user-image"><img id="profilepic" class="user-image" src="" alt="">
+                                                </div>
+                                                <div id="changedp">Change DP</div>
+                                            </div>
+                                            <div class="profile-details">
+
+                                                <div id="editdetails"><span>+Edit Details</span></div>
+                                                <!--<div class=" "><span class="col red-header user-class">Class:</span><span class="col" id="user-class">12th</span></div>-->
+                                                <!--<div class=" "><span class="col red-header user-school">School:</span><span class="col" id="user-school">Hansraj</span></div>-->
+                                                <!--<div class=" "><span class="col red-header user-other-institutes">Other Institutes:</span><span class="col" id="user-other-institutes">Impact</span></div>-->
+                                                <!--<div class=" "><span class="col red-header user-interests">Interests:</span><span class="col" id="user-interests">Maths,Physics</span></div>-->
+                                                <!--<div class=" "><span class="col red-header user-tagline">Tagline:</span><span class="col" id="user-tagline">Keep looking for it till you find it or create it</span></div>-->
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+                                    <div class="content-tags-filter">
+                                        <div class=" recent">Recent</div><div class=" content-filter-button " id="showQuestions">Questions</div><div id="showAnswers" class=" content-filter-button content-filter-button-active ">Answers</div>
+                                    </div>
+                                    <div class="profile-content">
+                                        <div class="col">
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="user_content_data">
+                            <div class="content_head"><span class="content_count">8</span><span class="content_description">Answers</span></div>
+                            <div class="row feed-post">
+                                <div class="col">
+                                    <div class="col feed-post-question">
+                                        <div class="">
+                                            <div class="row question-header red-header">Question<div class="row question-updates">
+                                                <div class="new-answers"> <span class="count">+1</span> Answers</div>
+                                                <div class="new-comments"><span class="count">+2</span> Comments</div>
+                                                <div class="new-likes"><span class="count">+11</span> Likes </div></div>
+                                            </div>
+                                            <div class="question-content">Did you any time face driver cancellation or non availability of cars?</div>
+                                        </div>
+                                        <div class=" feed-post-answer">
+                                            <div class="answer-header red-header">Answer</div>
+
+                                            <div class="answer-content"><p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ducimus facilis
+                                                hic, id illum perferendis recusandae veniam! Beatae, consequuntur dolorem est facilis maiores pariatur repudiandae
+                                                saepe? Incidunt nisi porro quo velit.Lorem ipsum dolor sit amet, consectetur adipisicing elit. Amet, asperiores assumenda
+                                                beatae eligendi expedita id illum in inventore iste laboriosam nesciunt nobis nostrum optio pariatur quam quasi quibusdam
+                                                totam vel.</p>
+                                                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Architecto consequatur, consequuntur eiu
+                                                    s explicabo natus sed suscipit! Asperiores commodi eos, fugiat illum ipsum laudantium necessitatibus
+                                                    provident quae, quasi rem vitae voluptate.</p>
+                                                <button class="more-button">More...</button>
+                                            </div>
+
+
+                                        </div>
+
+
+                                    </div>
+
+                                </div>
+                            </div>
+                            <div class="row feed-post">
+                                <div class="col">
+                                    <div class="col feed-post-question">
+                                        <div class="">
+                                            <div class="row question-header red-header">Question<div class="row question-updates">
+                                                <div class="new-answers"> <span class="count">+1</span> Answers</div>
+                                                <div class="new-comments"><span class="count">+2</span> Comments</div>
+                                                <div class="new-likes"><span class="count">+11</span> Likes </div></div>
+                                            </div>
+                                            <div class="question-content">Did you any time face driver cancellation or non availability of cars?</div>
+                                        </div>
+                                        <div class=" feed-post-answer">
+                                            <div class="answer-header red-header">Answer</div>
+                                            <button class="more-button">More...</button>
+                                            <div class="answer-content"><p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ducimus facilis
+                                                hic, id illum perferendis recusandae veniam! Beatae, consequuntur dolorem est facilis maiores pariatur repudiandae
+                                                saepe? Incidunt nisi porro quo velit.Lorem ipsum dolor sit amet, consectetur adipisicing elit. Amet, asperiores assumenda
+                                                beatae eligendi expedita id illum in inventore iste laboriosam nesciunt nobis nostrum optio pariatur quam quasi quibusdam
+                                                totam vel.</p>
+                                                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Architecto consequatur, consequuntur eiu
+                                                    s explicabo natus sed suscipit! Asperiores commodi eos, fugiat illum ipsum laudantium necessitatibus
+                                                    provident quae, quasi rem vitae voluptate.</p>
+                                            </div>
+
+
+                                        </div>
+
+
+                                    </div>
+
+                                </div>
+                            </div>
+                            <div class="row feed-post">
+                                <div class="col">
+                                    <div class="col feed-post-question">
+                                        <div class="">
+                                            <div class="row question-header red-header">Question<div class="row question-updates">
+                                                <div class="new-answers"> <span class="count">+1</span> Answers</div>
+                                                <div class="new-comments"><span class="count">+2</span> Comments</div>
+                                                <div class="new-likes"><span class="count">+11</span> Likes </div></div>
+                                            </div>
+                                            <div class="question-content">Did you any time face driver cancellation or non availability of cars?</div>
+                                        </div>
+                                        <div class=" feed-post-answer">
+                                            <div class="answer-header red-header">Answer</div>
+                                            <button class="more-button">More...</button>
+                                            <div class="answer-content"><p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ducimus facilis
+                                                hic, id illum perferendis recusandae veniam! Beatae, consequuntur dolorem est facilis maiores pariatur repudiandae
+                                                saepe? Incidunt nisi porro quo velit.Lorem ipsum dolor sit amet, consectetur adipisicing elit. Amet, asperiores assumenda
+                                                beatae eligendi expedita id illum in inventore iste laboriosam nesciunt nobis nostrum optio pariatur quam quasi quibusdam
+                                                totam vel.</p>
+                                                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Architecto consequatur, consequuntur eiu
+                                                    s explicabo natus sed suscipit! Asperiores commodi eos, fugiat illum ipsum laudantium necessitatibus
+                                                    provident quae, quasi rem vitae voluptate.</p>
+                                            </div>
+
+
+                                        </div>
+
+
+                                    </div>
+
+                                </div>
+                            </div>
+                            <div class="row feed-post">
+                                <div class="col">
+                                    <div class="col feed-post-question">
+                                        <div class="">
+                                            <div class="row question-header red-header">Question<div class="row question-updates">
+                                                <div class="new-answers"> <span class="count">+1</span> Answers</div>
+                                                <div class="new-comments"><span class="count">+2</span> Comments</div>
+                                                <div class="new-likes"><span class="count">+11</span> Likes </div></div>
+                                            </div>
+                                            <div class="question-content">Did you any time face driver cancellation or non availability of cars?</div>
+                                        </div>
+                                        <div class=" feed-post-answer">
+                                            <div class="answer-header red-header">Answer</div>
+                                            <button class="more-button">More...</button>
+                                            <div class="answer-content"><p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ducimus facilis
+                                                hic, id illum perferendis recusandae veniam! Beatae, consequuntur dolorem est facilis maiores pariatur repudiandae
+                                                saepe? Incidunt nisi porro quo velit.Lorem ipsum dolor sit amet, consectetur adipisicing elit. Amet, asperiores assumenda
+                                                beatae eligendi expedita id illum in inventore iste laboriosam nesciunt nobis nostrum optio pariatur quam quasi quibusdam
+                                                totam vel.</p>
+                                                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Architecto consequatur, consequuntur eiu
+                                                    s explicabo natus sed suscipit! Asperiores commodi eos, fugiat illum ipsum laudantium necessitatibus
+                                                    provident quae, quasi rem vitae voluptate.</p>
+                                            </div>
+
+
+                                        </div>
+
+
+                                    </div>
+
+                                </div>
+                            </div>
+                            <div class="row feed-post">
+                                <div class="col">
+                                    <div class="col feed-post-question">
+                                        <div class="">
+                                            <div class="row question-header red-header">Question<div class="row question-updates">
+                                                <div class="new-answers"> <span class="count">+1</span> Answers</div>
+                                                <div class="new-comments"><span class="count">+2</span> Comments</div>
+                                                <div class="new-likes"><span class="count">+11</span> Likes </div></div>
+                                            </div>
+                                            <div class="question-content">Did you any time face driver cancellation or non availability of cars?</div>
+                                        </div>
+                                        <div class=" feed-post-answer">
+                                            <div class="answer-header red-header">Answer</div>
+                                            <button class="more-button">More...</button>
+                                            <div class="answer-content"><p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ducimus facilis
+                                                hic, id illum perferendis recusandae veniam! Beatae, consequuntur dolorem est facilis maiores pariatur repudiandae
+                                                saepe? Incidunt nisi porro quo velit.Lorem ipsum dolor sit amet, consectetur adipisicing elit. Amet, asperiores assumenda
+                                                beatae eligendi expedita id illum in inventore iste laboriosam nesciunt nobis nostrum optio pariatur quam quasi quibusdam
+                                                totam vel.</p>
+                                                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Architecto consequatur, consequuntur eiu
+                                                    s explicabo natus sed suscipit! Asperiores commodi eos, fugiat illum ipsum laudantium necessitatibus
+                                                    provident quae, quasi rem vitae voluptate.</p>
+                                            </div>
+
+
+                                        </div>
+
+
+                                    </div>
+
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col right-menu">
+                <div class="col">
+                    <div class="row category">
+                        <div class="col">
+                            <div class="category-header">
+                                <span class="red-header">Your Library</span>
+                            </div>
+                            <div class="row">
+                                <div class="col categories">
+                                    <ul>
+                                        <li><a href="" class="red-option">IIT Kanpur</a></li>
+                                        <li><a href="" class="red-option">Impact</a></li>
+                                        <li><a href="" class="red-option">Hansraj</a></li>
+
+                                    </ul>
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        </div>
+
+    </div>
+
+</div>
+
+
+
+
+</body>
+<script type="text/javascript" src="gs.js"></script>
+<script type="text/javascript" src="notifs.js"></script>
+<script type="text/javascript" src="displayprofile.js"></script>
+</html>
